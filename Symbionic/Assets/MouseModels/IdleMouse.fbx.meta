@@ -1,0 +1,263 @@
+fileFormatVersion: 2
+guid: 758faf512f098074cb473dc2a3507762
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: back
+    100002: //RootNode
+    100004: joint1
+    100006: joint10
+    100008: joint11
+    100010: joint12
+    100012: joint13
+    100014: joint14
+    100016: joint14 1
+    100018: joint15
+    100020: joint15 1
+    100022: joint16
+    100024: joint16 1
+    100026: joint2
+    100028: joint21
+    100030: joint22
+    100032: joint23
+    100034: joint24
+    100036: joint3
+    100038: joint4
+    100040: joint5
+    100042: joint6
+    100044: joint7
+    100046: joint8
+    100048: joint9
+    100050: left
+    100052: MetalLeg15
+    100054: MOUSE_COMPLETE_MouseBody4
+    100056: pCube5
+    100058: pCylinder43
+    100060: pCylinder46
+    100062: pCylinder47
+    100064: pCylinder48
+    100066: pCylinder49
+    100068: pCylinder50
+    100070: pCylinder53
+    100072: pCylinder54
+    100074: pGear1
+    100076: pGear2
+    100078: pGear3
+    100080: pGear4
+    100082: pGear5
+    100084: pHelix1
+    100086: pPipe14
+    100088: pPipe7
+    100090: pPipe8
+    100092: pPipe9
+    100094: TankBack
+    400000: back
+    400002: //RootNode
+    400004: joint1
+    400006: joint10
+    400008: joint11
+    400010: joint12
+    400012: joint13
+    400014: joint14
+    400016: joint14 1
+    400018: joint15
+    400020: joint15 1
+    400022: joint16
+    400024: joint16 1
+    400026: joint2
+    400028: joint21
+    400030: joint22
+    400032: joint23
+    400034: joint24
+    400036: joint3
+    400038: joint4
+    400040: joint5
+    400042: joint6
+    400044: joint7
+    400046: joint8
+    400048: joint9
+    400050: left
+    400052: MetalLeg15
+    400054: MOUSE_COMPLETE_MouseBody4
+    400056: pCube5
+    400058: pCylinder43
+    400060: pCylinder46
+    400062: pCylinder47
+    400064: pCylinder48
+    400066: pCylinder49
+    400068: pCylinder50
+    400070: pCylinder53
+    400072: pCylinder54
+    400074: pGear1
+    400076: pGear2
+    400078: pGear3
+    400080: pGear4
+    400082: pGear5
+    400084: pHelix1
+    400086: pPipe14
+    400088: pPipe7
+    400090: pPipe8
+    400092: pPipe9
+    400094: TankBack
+    2000000: back
+    2000002: left
+    2100000: phong3
+    2100002: lambert1
+    2100004: phong5
+    2100006: phong4
+    2100008: lambert3
+    2100010: mousebody
+    2100012: lambert5
+    2100014: lambert4
+    2100016: phong2
+    2100018: tailphong
+    2300000: MetalLeg15
+    2300002: pCube5
+    2300004: pCylinder43
+    2300006: pCylinder46
+    2300008: pCylinder47
+    2300010: pCylinder48
+    2300012: pCylinder49
+    2300014: pCylinder50
+    2300016: pCylinder53
+    2300018: pCylinder54
+    2300020: pGear1
+    2300022: pGear2
+    2300024: pGear3
+    2300026: pGear4
+    2300028: pGear5
+    2300030: pHelix1
+    2300032: pPipe14
+    2300034: pPipe7
+    2300036: pPipe8
+    2300038: pPipe9
+    2300040: TankBack
+    3300000: MetalLeg15
+    3300002: pCube5
+    3300004: pCylinder43
+    3300006: pCylinder46
+    3300008: pCylinder47
+    3300010: pCylinder48
+    3300012: pCylinder49
+    3300014: pCylinder50
+    3300016: pCylinder53
+    3300018: pCylinder54
+    3300020: pGear1
+    3300022: pGear2
+    3300024: pGear3
+    3300026: pGear4
+    3300028: pGear5
+    3300030: pHelix1
+    3300032: pPipe14
+    3300034: pPipe7
+    3300036: pPipe8
+    3300038: pPipe9
+    3300040: TankBack
+    4300000: MetalLeg15
+    4300002: pGear5
+    4300004: pGear4
+    4300006: pGear3
+    4300008: pGear2
+    4300010: pGear1
+    4300012: pCube5
+    4300014: pCylinder46
+    4300016: pCylinder47
+    4300018: pCylinder48
+    4300020: pCylinder49
+    4300022: pCylinder50
+    4300024: pCylinder43
+    4300026: pCylinder53
+    4300028: pCylinder54
+    4300030: MOUSE_COMPLETE_MouseBody4
+    4300032: TankBack
+    4300034: pPipe14
+    4300036: pPipe7
+    4300038: pPipe8
+    4300040: pPipe9
+    4300042: pHelix1
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: MOUSE_COMPLETE_MouseBody4
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
