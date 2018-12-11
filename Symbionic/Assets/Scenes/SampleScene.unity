@@ -599,12 +599,22 @@ Prefab:
     - target: {fileID: 114353112423865716, guid: 4e927520782011c4d9e1109b61397a4d,
         type: 2}
       propertyPath: walkSpeed
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114353112423865716, guid: 4e927520782011c4d9e1109b61397a4d,
         type: 2}
       propertyPath: runSpeed
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114353112423865716, guid: 4e927520782011c4d9e1109b61397a4d,
+        type: 2}
+      propertyPath: jumpSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 54054669355815862, guid: 4e927520782011c4d9e1109b61397a4d,
+        type: 2}
+      propertyPath: m_Constraints
+      value: 80
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 136119827651308570, guid: 4e927520782011c4d9e1109b61397a4d, type: 2}
