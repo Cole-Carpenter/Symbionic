@@ -13,9 +13,10 @@ public class PlayerController : MonoBehaviour {
     private float leftStart = 0f;
     private float rightStart = 0f;
 
+	private MyMessageListener SerialControllerM;
 	// Use this for initialization
 	void Start () {
-		
+		SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
 	}
 	
 	// Update is called once per frame
@@ -24,13 +25,13 @@ public class PlayerController : MonoBehaviour {
         leftStart -= Time.deltaTime;
         rightStart -= Time.deltaTime;
         print(running);
-
-        if (Input.GetKeyDown(KeyCode.Q))
+		Debug.Log(SerialControllerM.Q);
+        if (Input.GetKeyDown(KeyCode.Q) || SerialControllerM.Q)
         {
             leftStart = .1f;
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W) || SerialControllerM.W)
         {
             rightStart = .1f;
         }
@@ -57,17 +58,17 @@ public class PlayerController : MonoBehaviour {
             transform.position += transform.forward * runSpeed * Time.deltaTime;
         }
 
-        if (!running && Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.W))
+        if (!running && (Input.GetKey(KeyCode.Q) ||  SerialControllerM.Q) && (Input.GetKey(KeyCode.W) || SerialControllerM.W))
         {
             transform.position += transform.forward * walkSpeed * Time.deltaTime;
         }
 
-        else if (!running && Input.GetKey(KeyCode.Q))
+        else if (!running && (Input.GetKey(KeyCode.Q) ||  SerialControllerM.Q))
         {
             transform.Rotate(Vector3.down * rotateSpeed * Time.deltaTime);
         }
 
-        else if (!running && Input.GetKey(KeyCode.W))
+        else if (!running && (Input.GetKey(KeyCode.W) || SerialControllerM.W))
         {
             transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
         }
