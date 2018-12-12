@@ -552,7 +552,7 @@ GameObject:
   - component: {fileID: 65549085352015944}
   - component: {fileID: 114522728601583146}
   m_Layer: 0
-  m_Name: player
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6803,6 +6803,7 @@ MonoBehaviour:
   walkSpeed: 4
   runSpeed: 8
   jumpSpeed: 2
+  canGlide: 1
 --- !u!137 &137649106634377642
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
