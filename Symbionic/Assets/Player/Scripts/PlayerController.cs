@@ -33,12 +33,20 @@ public class PlayerController : MonoBehaviour {
 	private bool updraftActive = false;
 	
 
-	//abilities
+	//abilities Unlockable
 	public bool canGlide = true;
 	public bool canDiveBomb = false;
 	public bool canUpdraft = true;
-	private bool canSqueak = false;
-	private bool canDig = true;
+
+	//abilities USB
+		//Organic
+	public bool canSqueak = true;
+	public bool canDig = false;
+	public bool canBlood = false; // Not added yet
+		//Mechanical
+	public bool canRadar = true;
+	public bool canMagnet = false;
+	public bool canOil = false; //Not added yet
 
 	//timers
     private float runStart = 0f;
@@ -210,12 +218,12 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//radar
-		if(Input.GetKeyDown(KeyCode.Z)){
+		if(canRadar && Input.GetKeyDown(KeyCode.Z)){
 			radar.GetComponent<Radar>().Ping();
 		}
 
 		//magnet
-		if(Input.GetKey(KeyCode.F)){
+		if(canMagnet && Input.GetKey(KeyCode.Z)){
 			foreach(GameObject magnetic in magnetics){
 				magnetic.transform.position = Vector3.MoveTowards(magnetic.transform.position, transform.position, .1f);
 			}

@@ -10,24 +10,21 @@ public class MyMessageListener : MonoBehaviour {
 	//ARDUINO CONNECTION STUFF
     private bool Connected;
 
-    public GameObject L;
-    public GameObject R;
-	public GameObject T;
 	public Text CodeT;
 
 	//USB CONNECTION STUFF
 	private List<String> USBS;
 
-	private String TextFileName = "TestingUSB.txt";
+	private String TextFileName = "USB.txt";
 	private String FileCommands;
 
-	public GameObject Heal;
-	public GameObject Fix;
-
+	public GameObject PlayerController;
 	[HideInInspector]
 	public bool Q = false;
 	[HideInInspector]
 	public bool W = false;
+
+	private float prevTime = 0f;
     /*
 		The Driver letter assignment in windows works as such:
 
@@ -45,12 +42,6 @@ public class MyMessageListener : MonoBehaviour {
 
     */
 
-    public bool MOVEMENT = false;
-    private bool MovementCooldown = false;
-    public float coolDownTime = 3f;
-    private float coolDownTimer = 0f;
-    private float buttonDouble = 0f;
-    private string COMMANDS = "WW";
 	// Use this for initialization
 	void Start () {
 
@@ -124,28 +115,16 @@ public class MyMessageListener : MonoBehaviour {
 	*/
   void PowerUp(String FileCommand){
 			if(FileCommand != null){
-				if(FileCommand.Contains("Command1")){
-					float x = Input.GetAxis("Horizontal");
-					Rigidbody rb = Heal.GetComponent<Rigidbody>();
-					rb.velocity = new Vector3(x * 10.0f, rb.velocity.y, rb.velocity.z);
-					Heal.GetComponent<Renderer>().material.color = Color.red;
-                    GetComponent<SerialController>().SendSerialMessage("H");
+				if(FileCommand.Contains("Dig")){
+                    GetComponent<SerialController>().SendSerialMessage("GC");
                     return;
-				}else{
-					Heal.GetComponent<Renderer>().material.color = Color.white;
 				}
-				if(FileCommand.Contains("Command2")){
-					float x = Input.GetAxis("Vertical");
-					Rigidbody rb = Heal.GetComponent<Rigidbody>();
-					rb.velocity = new Vector3(rb.velocity.x, x * 10.0f, rb.velocity.z);
-					Fix.GetComponent<Renderer>().material.color = Color.black;
-                    GetComponent<SerialController>().SendSerialMessage("B");
+				if(FileCommand.Contains("Magnet")){
+				//Debug.Log(FileCommand);
+                    GetComponent<SerialController>().SendSerialMessage("BC");
                     return;
                 }
-                else{
-					Fix.GetComponent<Renderer>().material.color = Color.white;
-				}
-                GetComponent<SerialController>().SendSerialMessage("A");
+                GetComponent<SerialController>().SendSerialMessage("RC");
         }
 	}
 
@@ -175,14 +154,6 @@ public class MyMessageListener : MonoBehaviour {
         return Connected;
     }
 
-    bool ContainsCommand(string c, char Command){
-        foreach(char x in c){
-            if(x == Command){
-                return true;
-            }
-        }
-        return false;
-    }
 
 
     void KeypadControls()
@@ -191,7 +162,7 @@ public class MyMessageListener : MonoBehaviour {
 		//NUMPAD STUFF you have to use Keycode.Keypad# example Keycode.Keypad7 
 		//or you can use Input.GetKeyDown("[7]") specifically for the keypad
 		
-
+		float currentTime = Time.time;
 		//I HAVE NO IDEA HOW TO MAKE THIS BETTER SO BARE WITH ME
 		if(Input.GetKeyDown(KeyCode.Keypad0) || Input.GetKeyDown(KeyCode.Insert)){
 			CodeT.text += "0";
@@ -224,12 +195,39 @@ public class MyMessageListener : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Keypad9) || Input.GetKeyDown(KeyCode.PageUp)){
 			CodeT.text += "9";
 		}
-		if(CodeT.text.Length == 7){
-			if(CodeT.text == "1234567"){
-				T.GetComponent<Renderer>().material.color = Color.yellow;
-			}else if(CodeT.text == "7654321"){
-				T.GetComponent<Renderer>().material.color = Color.white;
-			}
+		if(CodeT.text == "5889"){
+		
+		}else if(CodeT.text == "4816"){
+		
+		}else if (CodeT.text == "1829"){
+		
+		}else if(CodeT.text == "0318"){
+	
+		}else if(CodeT.text == "8840"){
+		
+		}else if(CodeT.text == "8446"){
+		
+		}else if(CodeT.text == "0888"){
+		
+		}else if(CodeT.text == "7680"){
+		
+		}else if(CodeT.text == "5898"){
+		
+		}else if(CodeT.text == "7783"){
+		
+		}
+
+		else if(CodeT.text == "6444"){
+			Debug.Log("Ability to Glide");
+		}else if(CodeT.text == "7285"){
+			Debug.Log("Glide updraft (Second Jump)");
+		}else if(CodeT.text == "6432"){
+			Debug.Log("Jump Higher");
+		}else if(CodeT.text == "4512"){
+			Debug.Log("Dive Bomb");
+		}
+		if(CodeT.text.Length > 5){
+			
 			CodeT.text = "";
 		}
     }

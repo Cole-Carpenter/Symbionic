@@ -70,29 +70,7 @@ void loop() {
   /*
    * 
    */
-  ledCommands = Serial.read();
-    switch(ledCommands[0]){
-      default:
-        rBright = 255;
-        gBright = 255;
-        bBright = 255;
-        break;
-      case 'R':
-        rBright = 255;
-        gBright = 0;
-        bBright =0;
-        break;
-      case 'G':
-        rBright = 0;
-        gBright = 255;
-        bBright = 0;
-      case 'B':
-        rBright = 0;
-        gBright = 0;
-        bBright = 255;
-        break;        
-    }
-    if(ledCommands.length() == 2){
+   /* if(ledCommands.length() == 2){
       switch(ledCommands[1]){
         case 'C':
           colorState = COLOR_;
@@ -113,8 +91,8 @@ void loop() {
     OneLight(rBright, gBright, bBright, millis());
   }else if(colorState == 2){
     TripleLight(millis());
-  }
-  TripleLight(millis());
+  }*/
+  TurnOn(rBright, gBright, bBright);
   //OneLight(rBright, gBright
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
  /* if (buttonState == HIGH) {
