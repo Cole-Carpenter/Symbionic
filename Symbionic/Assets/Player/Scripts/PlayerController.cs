@@ -13,7 +13,12 @@ public class PlayerController : MonoBehaviour {
 	//components
 	private Rigidbody rb;
 	private Animator ac;
+	private Animator sac;
 	private ConstantForce f;
+	public GameObject spring;
+	
+	//boxes
+	private GameObject [] boxes;
 
 	//states
     private bool runActive = false;
@@ -23,6 +28,7 @@ public class PlayerController : MonoBehaviour {
 
 	//abilities
 	public bool canGlide = true;
+	public bool canDiveBomb = false;
 
 	//timers
     private float runStart = 0f;
@@ -36,6 +42,7 @@ public class PlayerController : MonoBehaviour {
 		SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
 		rb = GetComponent<Rigidbody>();
 		ac = GetComponent<Animator>();
+		sac = spring.GetComponent<Animator>();
 		f = GetComponent<ConstantForce>();
 	}
 	
@@ -48,8 +55,6 @@ public class PlayerController : MonoBehaviour {
 		pJumpStart -= Time.deltaTime;
 
 		grounded = CheckGrounded();
-
-		//Debug.Log(SerialControllerM.Q);
 
 		
 		//Running
@@ -124,13 +129,13 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		if(pJumpStart > 0 && Input.GetKeyDown(KeyCode.S)){
-			ac.SetTrigger("jump");
 			Jump(true);
+			canDiveBomb = true;
 		}
 
 		else if(Input.GetKeyDown(KeyCode.S) && crouching){
-			ac.SetTrigger("jump");
 			Jump(false);
+			canDiveBomb = true;
 		}
 
 		//gliding
@@ -142,6 +147,16 @@ public class PlayerController : MonoBehaviour {
 			EndGlide();
 		}
 
+		//DiveBomb
+		canDiveBomb = !grounded;
+
+		if(canDiveBomb && Input.GetKeyDown(KeyCode.A)){
+			DiveBomb();
+		}
+
+		else if (grounded){
+			EndDiveBomb();
+		}
         
     }
 
@@ -157,21 +172,43 @@ public class PlayerController : MonoBehaviour {
 		 }
 
 		 if(grounded){
-		 	 rb.AddForce(Vector3.up * height, ForceMode.Impulse);
+			ac.SetTrigger("jump");
+			sac.SetTrigger("jump");
+		 	rb.AddForce(Vector3.up * height, ForceMode.Impulse);
 		 }
 	}
 
 	private void Glide(){
-		f.force = Vector3.up * 3f;
+		walkSpeed = runSpeed;
+		rb.drag = .75f;
+		f.force = Vector3.up * 8.5f;
 	}
 
 	private void EndGlide(){
-		f.force = new Vector3(0,0,0);
+		walkSpeed = 4;
+		rb.drag = 0;
+		if(f.force.y > 0){
+			f.force = new Vector3(0,0,0);
+		}
+	}
+
+	private void DiveBomb(){
+		f.force = -Vector3.up * 50f;
+	}
+
+	private void EndDiveBomb(){
+		if(f.force.y < 0){
+			f.force = new Vector3(0,0,0);
+		}
 	}
 
 	private bool CheckGrounded(){
-		float DisstanceToTheGround = GetComponent<Collider>().bounds.extents.y;
-		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DisstanceToTheGround + 0.1f);
+		float DistanceToTheGround = GetComponent<Collider>().bounds.extents.y;
+		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + 0.1f);
 		return IsGrounded;
+	}
+
+	private void OnTriggerEnter(Collider other){
+	
 	}
 }
