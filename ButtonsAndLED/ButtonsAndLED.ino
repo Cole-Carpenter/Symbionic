@@ -18,15 +18,6 @@ int bBright = 255;
 int fadeSpeed = 10;
 
 unsigned long last_time = 0;
-//2, 4, 7, 8, 10, 11, 12, 13, 3  this the oreder of the buttons
-const int buttonPin = 2;     // the number of the pushbutton pin
-const int buttonPin4 = 4;
-const int buttonPin7 = 7;
-const int buttonPin8 = 8;
-const int buttonPin10 = 10;
-const int buttonPin11 = 11;
-const int buttonPin12 = 12;
-const int buttonPin13 = 13;
 
 bool Color = false;
 bool SingleFlashingColor = false;
@@ -57,14 +48,6 @@ COMBO
     Run forward, turn completely around, crouch, perfect jump, crouch, perfect jump -- backflip
  */
 // variables will change:
-int leftState = 0;         // variable for reading the pushbutton status
-int rightState = 0;
-int crouchState = 0;
-int jumpState = 0;
-int nibbleState = 0;
-int interactSqueakState = 0;
-int organicState = 0;
-int mechanicalState = 0;
 unsigned long previousMillis = 0;
 
 int LEDSTATE = 0;
@@ -75,14 +58,7 @@ void setup() {
   // initialize the LED pin as an output:
   pinMode(LED_BUILTIN, OUTPUT);
   // initialize the pushbutton pin as an input:
-  pinMode(buttonPin, INPUT);
-  pinMode(buttonPin4, INPUT);
-  pinMode(buttonPin7, INPUT);
-  pinMode(buttonPin8, INPUT);
-  pinMode(buttonPin10, INPUT);
-  pinMode(buttonPin11, INPUT);
-  pinMode(buttonPin12, INPUT);
-  pinMode(buttonPin13, INPUT);
+ 
   
    pinMode(GREEN_LED, OUTPUT);
    pinMode(RED_LED, OUTPUT);
@@ -91,75 +67,9 @@ void setup() {
 }
 
 void loop() {
-  
-      Commands = "";
-  // read the state of the pushbutton value:
-  leftState = digitalRead(buttonPin);
-  rightState = digitalRead(buttonPin4);
-  crouchState = digitalRead(buttonPin7);
-  jumpState = digitalRead(buttonPin8);
-  nibbleState = digitalRead(buttonPin10);
-  interactSqueakState = digitalRead(buttonPin11);
-  organicState = digitalRead(buttonPin12);
-  mechanicalState = digitalRead(buttonPin13);
-  
-  int myStates[8] = {leftState, rightState, crouchState, jumpState, nibbleState, interactSqueakState, organicState, mechanicalState};
- /* if (leftState == LOW){
-    Commands += "L,";
-  }
-  else{
-    Commands += "W,";
-  }
-  
-  if(rightState == LOW){
-    Commands += "R,";
-  }
-  else{
-    Commands += "W,";
-  }
-  
-  if (crouchState == LOW){
-    Commands += "C,";
-  }
-  else{
-    Commands += "W,";
-  }
-  if (jumpState == LOW){
-    Commands += "J,";
-  }
-  else{
-    Commands += "W,";
-  }
-  if(nibbleState == LOW){
-    Commands += "N,";
-  }else{
-    Commands += "W,";
-  }
-  if(interactState == LOW){
-    Commands += "M,";
-  }else{
-    Commands += "W,";
-  }
-  if(oSqueakState == LOW){
-    Commands += "X,";
-  }else{
-    Commands += 
-  }
-
-int crouchState = 0;
-int jumpState = 0;
-int nibbleState = 0;
-int interactState = 0;
-int oSqueakState = 0;
-int mSqueakState = 0;
-*/
-for(int i = 0; i < 8; i++){
-  if(i != 7)
-    Commands += String(myStates[i])+ "," ;
-  else
-    Commands += String(myStates[i]);
-}
-  Serial.println(Commands);
+  /*
+   * 
+   */
   ledCommands = Serial.read();
     switch(ledCommands[0]){
       default:

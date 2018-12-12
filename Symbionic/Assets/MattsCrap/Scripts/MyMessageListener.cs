@@ -25,9 +25,9 @@ public class MyMessageListener : MonoBehaviour {
 	public GameObject Fix;
 
 	[HideInInspector]
-	public bool Q;
+	public bool Q = false;
 	[HideInInspector]
-	public bool W;
+	public bool W = false;
     /*
 		The Driver letter assignment in windows works as such:
 
@@ -50,7 +50,7 @@ public class MyMessageListener : MonoBehaviour {
     public float coolDownTime = 3f;
     private float coolDownTimer = 0f;
     private float buttonDouble = 0f;
-	private bool[] COMMANDS;
+    private string COMMANDS = "WW";
 	// Use this for initialization
 	void Start () {
 
@@ -69,7 +69,6 @@ public class MyMessageListener : MonoBehaviour {
         {
             	//Debug.Log(d);
         }
-		COMMANDS = new bool[8];
 
 		/*string path = @"c:\Users\carlsm4\Test.txt";
 		// Open the file to read from.
@@ -115,6 +114,7 @@ public class MyMessageListener : MonoBehaviour {
 			}
 		}
 		PowerUp(FileCommands);
+		KeypadControls();
 		FileCommands = "";
 
 	}
@@ -160,8 +160,8 @@ public class MyMessageListener : MonoBehaviour {
 
     void OnMessageArrived(string m)
     {
-        //TestCommands(m);
-        //Debug.Log("Arrived: " + m);
+
+        Debug.Log("Arrived: " + m);
 
     }
     void OnConnectionEvent(bool s)
@@ -185,41 +185,8 @@ public class MyMessageListener : MonoBehaviour {
     }
 
 
-    void TestCommands(string CList)
+    void KeypadControls()
     {
-        string[] SS = CList.Split(new string[] { ","}, StringSplitOptions.None);
-		int ij = 0;
-        foreach(String x in SS){
-			if(int.Parse(x) == 0)
-				COMMANDS[ij] = true;
-			else
-				COMMANDS[ij] = false;
-			ij++;
-        }
-		foreach(bool c in COMMANDS){
-			Debug.Log(c);
-		}
-        if (COMMANDS[0])
-        {
-            L.GetComponent<Renderer>().material.color = Color.yellow;
-			Q = true;
-        }
-        else
-        {
-            L.GetComponent<Renderer>().material.color = Color.white;
-			Q = false;
-        }
-        if(COMMANDS[1])
-        {
-			Heal.transform.Translate(Vector3.up * 3 * Time.deltaTime, Space.World);
-            R.GetComponent<Renderer>().material.color = Color.yellow;
-			W = true;
-        }
-        else
-        {
-            R.GetComponent<Renderer>().material.color = Color.white;
-			W = false;
-        }
 		
 		//NUMPAD STUFF you have to use Keycode.Keypad# example Keycode.Keypad7 
 		//or you can use Input.GetKeyDown("[7]") specifically for the keypad
@@ -265,38 +232,6 @@ public class MyMessageListener : MonoBehaviour {
 			}
 			CodeT.text = "";
 		}
-        //Checking Command schemes
-       /* CheckDoubleTap(Time.time, commands);
-        if (MOVEMENT)
-        {
-            L.GetComponent<Renderer>().material.color = Color.yellow;
-        }
-        else
-        {
-            L.GetComponent<Renderer>().material.color = Color.white;
-        }*/
     }
 
-    private void CheckDoubleTap(float time, string c)
-    {   
-        if(buttonDouble == 0)
-        {
-            buttonDouble = time;
-        }
-
-        /*if(time - coolDownTimer >= coolDownTime)
-            if(time - buttonDouble >= coolDownTime)
-            {
-                Debug.Log("SHOULD SHOW UP EVERY SECOND");
-                if ((c[0] != COMMANDS[0] /*&& c[1] != COMMANDS[1]*//*))
-                {
-                    MOVEMENT = true;
-                    coolDownTimer = Time.time;
-                }
-                else
-                    MOVEMENT = false;
-
-                COMMANDS = c;
-            }*/
-    }
 }
