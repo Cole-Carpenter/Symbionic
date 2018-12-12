@@ -90,9 +90,10 @@ void loop() {
   }else if (colorState == 1){
     OneLight(rBright, gBright, bBright, millis());
   }else if(colorState == 2){
-    TripleLight(millis());
+    
   }*/
-  TurnOn(rBright, gBright, bBright);
+  TripleLight(millis());
+  //TurnOn(rBright, gBright, bBright);
   //OneLight(rBright, gBright
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
  /* if (buttonState == HIGH) {

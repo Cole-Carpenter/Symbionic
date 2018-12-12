@@ -25,6 +25,8 @@ public class MyMessageListener : MonoBehaviour {
 	public bool W = false;
 
 	private float prevTime = 0f;
+
+	public AudioClip[] Audio;
     /*
 		The Driver letter assignment in windows works as such:
 
@@ -116,15 +118,19 @@ public class MyMessageListener : MonoBehaviour {
   void PowerUp(String FileCommand){
 			if(FileCommand != null){
 				if(FileCommand.Contains("Dig")){
-                    GetComponent<SerialController>().SendSerialMessage("GC");
-                    return;
+					PlayerController.GetComponent<PlayerController>().canDig = true;
+					PlayerController.GetComponent<PlayerController>().canSqueak = false;
+				}else{
+					PlayerController.GetComponent<PlayerController>().canDig = false;
+					PlayerController.GetComponent<PlayerController>().canSqueak = true;
 				}
 				if(FileCommand.Contains("Magnet")){
-				//Debug.Log(FileCommand);
-                    GetComponent<SerialController>().SendSerialMessage("BC");
-                    return;
-                }
-                GetComponent<SerialController>().SendSerialMessage("RC");
+					PlayerController.GetComponent<PlayerController>().canMagnet = true;
+					PlayerController.GetComponent<PlayerController>().canRadar = false;
+                }else{
+					PlayerController.GetComponent<PlayerController>().canMagnet = false;
+					PlayerController.GetComponent<PlayerController>().canRadar = true;
+				}
         }
 	}
 
@@ -195,38 +201,54 @@ public class MyMessageListener : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Keypad9) || Input.GetKeyDown(KeyCode.PageUp)){
 			CodeT.text += "9";
 		}
+		AudioSource audioS = PlayerController.GetComponent<AudioSource>();
 		if(CodeT.text == "5889"){
-		
+			audioS.clip = Audio[0];
+
 		}else if(CodeT.text == "4816"){
-		
+			audioS.clip = Audio[1];
+			audioS.Play();
 		}else if (CodeT.text == "1829"){
-		
+			audioS.clip = Audio[2];
+			audioS.Play();
 		}else if(CodeT.text == "0318"){
-	
+			audioS.clip = Audio[3];
+			audioS.Play();
 		}else if(CodeT.text == "8840"){
-		
+			audioS.clip = Audio[4];
+			audioS.Play();
 		}else if(CodeT.text == "8446"){
-		
+			audioS.clip = Audio[5];
+			audioS.Play();
 		}else if(CodeT.text == "0888"){
-		
+			audioS.clip = Audio[6];
+			audioS.Play();
 		}else if(CodeT.text == "7680"){
-		
+			audioS.clip = Audio[7];
+			audioS.Play();
 		}else if(CodeT.text == "5898"){
-		
+			audioS.clip = Audio[8];
+			audioS.Play();
 		}else if(CodeT.text == "7783"){
-		
+			audioS.clip = Audio[9];
+			audioS.Play();
+
 		}
 
 		else if(CodeT.text == "6444"){
 			Debug.Log("Ability to Glide");
+			PlayerController.GetComponent<PlayerController>().canGlide = true;
 		}else if(CodeT.text == "7285"){
 			Debug.Log("Glide updraft (Second Jump)");
+			PlayerController.GetComponent<PlayerController>().canUpdraft = true;
 		}else if(CodeT.text == "6432"){
 			Debug.Log("Jump Higher");
+			//PlayerController.GetComponent<PlayerController>().
 		}else if(CodeT.text == "4512"){
 			Debug.Log("Dive Bomb");
+			PlayerController.GetComponent<PlayerController>().canDiveBomb = true;
 		}
-		if(CodeT.text.Length > 5){
+		if(CodeT.text.Length > 4){
 			
 			CodeT.text = "";
 		}

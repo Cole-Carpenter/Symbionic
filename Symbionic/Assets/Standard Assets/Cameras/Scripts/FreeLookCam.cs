@@ -73,10 +73,10 @@ namespace UnityStandardAssets.Cameras
 			return;
 
             // Read the user directly from the user joystick
-            //var x = CrossPlatformInputManager.GetAxis("Horizontal_joy");
-            //var y = CrossPlatformInputManager.GetAxis("Vertical_joy");
-			var x = CrossPlatformInputManager.GetAxis("Mouse X");
-			var y = CrossPlatformInputManager.GetAxis("Mouse Y");
+			var x = CrossPlatformInputManager.GetAxis("Horizontal_joy");
+            var y = CrossPlatformInputManager.GetAxis("Vertical_joy");
+			//var x = CrossPlatformInputManager.GetAxis("Mouse X");
+			//var y = CrossPlatformInputManager.GetAxis("Mouse Y");
 
             // Adjust the look angle by an amount proportional to the turn speed and horizontal input.
             m_LookAngle += x*m_TurnSpeed;

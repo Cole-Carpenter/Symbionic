@@ -34,9 +34,9 @@ public class PlayerController : MonoBehaviour {
 	private bool updraftActive = false;
 
 	//abilities Unlockable
-	public bool canGlide = true;
+	public bool canGlide = false;
 	public bool canDiveBomb = false;
-	public bool canUpdraft = true;
+	public bool canUpdraft = false;
 
 	//abilities USB
 		//Organic
@@ -68,7 +68,18 @@ public class PlayerController : MonoBehaviour {
 		boxes = new List<GameObject>();
 		magnetics = new List<GameObject>();
 	}
-	
+	/*
+	 0f - left
+	 2 - crouch
+	 4 - Interact
+	 6 - Radar / magnet
+
+	 1 - right
+	 3 - Jump
+	 5 - Nibble
+	 7 - Squeak / Dig
+
+	*/
 	// Update is called once per frame
 	void Update () {
 		//running timers
@@ -89,12 +100,12 @@ public class PlayerController : MonoBehaviour {
 
 		
 		//Running
-        if (Input.GetKeyDown(KeyCode.Q) || SerialControllerM.Q)
+        if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.JoystickButton0))
         {
             leftStart = .275f;
         }
 
-        if (Input.GetKeyDown(KeyCode.W) || SerialControllerM.W)
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.JoystickButton1))
         {
             rightStart = .275f;
         }
@@ -126,19 +137,19 @@ public class PlayerController : MonoBehaviour {
         }
 
 		//walking and turning
-        if (!running && (Input.GetKey(KeyCode.Q) ||  SerialControllerM.Q) && (Input.GetKey(KeyCode.W) || SerialControllerM.W))
+        if (!running && (Input.GetKey(KeyCode.Q) ||  Input.GetKey(KeyCode.JoystickButton0)) && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
 			ac.SetBool("walking", true);
             transform.position += transform.forward * walkSpeed * Time.deltaTime;
         }
 
-        else if (!running && (Input.GetKey(KeyCode.Q) ||  SerialControllerM.Q))
+        else if (!running && (Input.GetKey(KeyCode.Q) ||  Input.GetKey(KeyCode.JoystickButton0)))
         {
 			ac.SetBool("walking", true);
             transform.Rotate(Vector3.down * rotateSpeed * Time.deltaTime);
         }
 
-        else if (!running && (Input.GetKey(KeyCode.W) || SerialControllerM.W))
+        else if (!running && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
 			ac.SetBool("walking", true);
             transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
@@ -148,7 +159,7 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//crouching and jumping
-		if(Input.GetKey(KeyCode.A)){
+		if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton2)){
 			crouching = true;
 			ac.SetBool("crouch",true);
 		}
@@ -157,27 +168,27 @@ public class PlayerController : MonoBehaviour {
 			ac.SetBool("crouch",false);
 		}
 
-		if(Input.GetKeyUp(KeyCode.A)){
+		if(Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.JoystickButton2)){
 			pJumpStart = .1f;
 		}
 
-		if(pJumpStart > 0 && Input.GetKeyDown(KeyCode.S)){
+		if(pJumpStart > 0 && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3))){
 			Jump(true);
 			canDiveBomb = true;
 		}
 
-		else if(Input.GetKeyDown(KeyCode.S) && crouching){
+		else if((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && crouching){
 			Jump(false);
 			canDiveBomb = true;
 		}
 
 		//gliding
-		else if(!grounded && Input.GetKeyDown(KeyCode.S) && canGlide && canUpdraft && updraftActive){
+		else if(!grounded && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && canGlide && canUpdraft && updraftActive){
 			updraftActive = false;
 			Updraft();
 		}
 
-		else if(!grounded && Input.GetKey(KeyCode.S) && canGlide && updraftTimer < 0){
+		else if(!grounded && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton3)) && canGlide && updraftTimer < 0){
 			Glide();
 		}
 
@@ -188,7 +199,7 @@ public class PlayerController : MonoBehaviour {
 		//DiveBomb
 		canDiveBomb = !grounded;
 
-		if(canDiveBomb && Input.GetKeyDown(KeyCode.A)){
+		if(canDiveBomb && (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2))){
 			DiveBomb();
 		}
 
@@ -197,29 +208,29 @@ public class PlayerController : MonoBehaviour {
 		}
         
 		//squeak
-		if(canSqueak && Input.GetKeyDown(KeyCode.X)){
+		if(canSqueak && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7))){
 			foreach(GameObject box in boxes){
 				uic.SendCode(box.GetComponent<BoxInteract>().Interact());
 			}
 		}
 
 		//Interact
-		if(Input.GetKeyDown(KeyCode.M)){
+		if(Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.JoystickButton4)){
 			Interact();
 		}
 
 		//nibble
-		if(Input.GetKeyDown(KeyCode.N)){
+		if(Input.GetKeyDown(KeyCode.N)|| Input.GetKeyDown(KeyCode.JoystickButton5)){
 			Nibble();
 		}
 
 		//dig
-		if(canDig && Input.GetKeyDown(KeyCode.X)){
+		if(canDig && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7))){
 			Dig();
 		}
 
 		//radar
-		if(canRadar && Input.GetKeyDown(KeyCode.Z)){
+		if(canRadar && (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.JoystickButton8))){
 			radar.GetComponent<Radar>().Ping();
 		}
 
@@ -333,7 +344,7 @@ public class PlayerController : MonoBehaviour {
 		if(other.tag == "magnetic"){
 			magnetics.Add(other.gameObject);
 		}
-		print(magnetics);
+		//print(magnetics);
 	}
 
 	private void OnTriggerExit(Collider other){
@@ -343,6 +354,6 @@ public class PlayerController : MonoBehaviour {
 		if(other.tag == "magnetic"){
 			magnetics.Remove(other.gameObject);
 		}
-		print(magnetics);
+		//print(magnetics);
 	}
 }
