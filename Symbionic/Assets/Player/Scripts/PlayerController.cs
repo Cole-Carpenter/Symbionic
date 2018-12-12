@@ -13,7 +13,9 @@ public class PlayerController : MonoBehaviour {
 	//components
 	private Rigidbody rb;
 	private Animator ac;
+	private Animator sac;
 	private ConstantForce f;
+	public GameObject spring;
 
 	//states
     private bool runActive = false;
@@ -36,6 +38,7 @@ public class PlayerController : MonoBehaviour {
 		SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
 		rb = GetComponent<Rigidbody>();
 		ac = GetComponent<Animator>();
+		sac = spring.GetComponent<Animator>();
 		f = GetComponent<ConstantForce>();
 	}
 	
@@ -125,11 +128,13 @@ public class PlayerController : MonoBehaviour {
 
 		if(pJumpStart > 0 && Input.GetKeyDown(KeyCode.S)){
 			ac.SetTrigger("jump");
+			sac.SetTrigger("jump");
 			Jump(true);
 		}
 
 		else if(Input.GetKeyDown(KeyCode.S) && crouching){
 			ac.SetTrigger("jump");
+			sac.SetTrigger("jump");
 			Jump(false);
 		}
 
@@ -162,16 +167,20 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void Glide(){
-		f.force = Vector3.up * 3f;
+		walkSpeed = runSpeed;
+		rb.drag = .75f;
+		f.force = Vector3.up * 8.5f;
 	}
 
 	private void EndGlide(){
+		walkSpeed = 4;
+		rb.drag = 0;
 		f.force = new Vector3(0,0,0);
 	}
 
 	private bool CheckGrounded(){
-		float DisstanceToTheGround = GetComponent<Collider>().bounds.extents.y;
-		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DisstanceToTheGround + 0.1f);
+		float DistanceToTheGround = GetComponent<Collider>().bounds.extents.y;
+		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + 0.1f);
 		return IsGrounded;
 	}
 }
