@@ -52,8 +52,6 @@ public class PlayerController : MonoBehaviour {
 
 		grounded = CheckGrounded();
 
-		//Debug.Log(SerialControllerM.Q);
-
 		
 		//Running
         if (Input.GetKeyDown(KeyCode.Q) || SerialControllerM.Q)
@@ -127,14 +125,10 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		if(pJumpStart > 0 && Input.GetKeyDown(KeyCode.S)){
-			ac.SetTrigger("jump");
-			sac.SetTrigger("jump");
 			Jump(true);
 		}
 
 		else if(Input.GetKeyDown(KeyCode.S) && crouching){
-			ac.SetTrigger("jump");
-			sac.SetTrigger("jump");
 			Jump(false);
 		}
 
@@ -162,7 +156,9 @@ public class PlayerController : MonoBehaviour {
 		 }
 
 		 if(grounded){
-		 	 rb.AddForce(Vector3.up * height, ForceMode.Impulse);
+			ac.SetTrigger("jump");
+			sac.SetTrigger("jump");
+		 	rb.AddForce(Vector3.up * height, ForceMode.Impulse);
 		 }
 	}
 
