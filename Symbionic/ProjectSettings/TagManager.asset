@@ -8,6 +8,7 @@ TagManager:
   - interactable
   - bitable
   - diggable
+  - magnetic
   layers:
   - Default
   - TransparentFX

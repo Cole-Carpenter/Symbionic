@@ -14,13 +14,16 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody rb;
 	private Animator ac;
 	private Animator sac;
+	private Animator bac;
 	private ConstantForce f;
 	public GameObject spring;
 	public GameObject radar;
+	public GameObject blades;
 	public Collider boxCollider;
 	
-	//boxes
+	//lists of interactables
 	private List<GameObject> boxes;
+	private List<GameObject> magnetics;
 
 	//states
     private bool runActive = false;
@@ -51,8 +54,10 @@ public class PlayerController : MonoBehaviour {
 		rb = GetComponent<Rigidbody>();
 		ac = GetComponent<Animator>();
 		sac = spring.GetComponent<Animator>();
+		bac = blades.GetComponent<Animator>();
 		f = GetComponent<ConstantForce>();
 		boxes = new List<GameObject>();
+		magnetics = new List<GameObject>();
 	}
 	
 	// Update is called once per frame
@@ -136,9 +141,11 @@ public class PlayerController : MonoBehaviour {
 		//crouching and jumping
 		if(Input.GetKey(KeyCode.A)){
 			crouching = true;
+			ac.SetBool("crouch",true);
 		}
 		else{
 			crouching = false;
+			ac.SetBool("crouch",false);
 		}
 
 		if(Input.GetKeyUp(KeyCode.A)){
@@ -206,6 +213,13 @@ public class PlayerController : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Z)){
 			radar.GetComponent<Radar>().Ping();
 		}
+
+		//magnet
+		if(Input.GetKey(KeyCode.F)){
+			foreach(GameObject magnetic in magnetics){
+				magnetic.transform.position = Vector3.MoveTowards(magnetic.transform.position, transform.position, .1f);
+			}
+		}
     }
 	private void Dig(){
 		RaycastHit hit;
@@ -258,12 +272,18 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void Glide(){
+		blades.SetActive(true);
+		bac.SetBool("glide",true);
+		ac.SetBool("glide",true);
 		walkSpeed = runSpeed;
 		rb.drag = .75f;
 		f.force = Vector3.up * 8.5f;
 	}
 
 	private void EndGlide(){
+		blades.SetActive(false);
+		bac.SetBool("glide",false);
+		ac.SetBool("glide",false);
 		walkSpeed = 4;
 		rb.drag = 0;
 		if(f.force.y > 0){
@@ -272,6 +292,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void Updraft(){
+		blades.SetActive(true);
+		bac.SetBool("glide",true);
+		ac.SetBool("glide",true);
 		updraftTimer = 3f;
 		walkSpeed = runSpeed;
 		rb.drag = .75f;
@@ -298,11 +321,19 @@ public class PlayerController : MonoBehaviour {
 		if(other.tag == "box"){
 			boxes.Add(other.gameObject);
 		}
+		if(other.tag == "magnetic"){
+			magnetics.Add(other.gameObject);
+		}
+		print(magnetics);
 	}
 
 	private void OnTriggerExit(Collider other){
 		if(other.tag == "box"){
 			boxes.Remove(other.gameObject);
 		}
+		if(other.tag == "magnetic"){
+			magnetics.Remove(other.gameObject);
+		}
+		print(magnetics);
 	}
 }
