@@ -50,7 +50,7 @@ public class MyMessageListener : MonoBehaviour {
     public float coolDownTime = 3f;
     private float coolDownTimer = 0f;
     private float buttonDouble = 0f;
-    private string COMMANDS = "WW";
+	private bool[] COMMANDS;
 	// Use this for initialization
 	void Start () {
 
@@ -69,6 +69,7 @@ public class MyMessageListener : MonoBehaviour {
         {
             	//Debug.Log(d);
         }
+		COMMANDS = new bool[8];
 
 		/*string path = @"c:\Users\carlsm4\Test.txt";
 		// Open the file to read from.
@@ -187,11 +188,18 @@ public class MyMessageListener : MonoBehaviour {
     void TestCommands(string CList)
     {
         string[] SS = CList.Split(new string[] { ","}, StringSplitOptions.None);
-        String commands = "";
+		int ij = 0;
         foreach(String x in SS){
-            commands += x;
+			if(int.Parse(x) == 0)
+				COMMANDS[ij] = true;
+			else
+				COMMANDS[ij] = false;
+			ij++;
         }
-        if (commands.Contains("L"))
+		foreach(bool c in COMMANDS){
+			Debug.Log(c);
+		}
+        if (COMMANDS[0])
         {
             L.GetComponent<Renderer>().material.color = Color.yellow;
 			Q = true;
@@ -201,7 +209,7 @@ public class MyMessageListener : MonoBehaviour {
             L.GetComponent<Renderer>().material.color = Color.white;
 			Q = false;
         }
-        if(commands.Contains("R"))
+        if(COMMANDS[1])
         {
 			Heal.transform.Translate(Vector3.up * 3 * Time.deltaTime, Space.World);
             R.GetComponent<Renderer>().material.color = Color.yellow;
@@ -276,11 +284,11 @@ public class MyMessageListener : MonoBehaviour {
             buttonDouble = time;
         }
 
-        if(time - coolDownTimer >= coolDownTime)
+        /*if(time - coolDownTimer >= coolDownTime)
             if(time - buttonDouble >= coolDownTime)
             {
                 Debug.Log("SHOULD SHOW UP EVERY SECOND");
-                if ((c[0] != COMMANDS[0] /*&& c[1] != COMMANDS[1]*/))
+                if ((c[0] != COMMANDS[0] /*&& c[1] != COMMANDS[1]*//*))
                 {
                     MOVEMENT = true;
                     coolDownTimer = Time.time;
@@ -289,6 +297,6 @@ public class MyMessageListener : MonoBehaviour {
                     MOVEMENT = false;
 
                 COMMANDS = c;
-            }
+            }*/
     }
 }
