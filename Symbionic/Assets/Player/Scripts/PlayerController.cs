@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour {
 	private Animator sac;
 	private ConstantForce f;
 	public GameObject spring;
+	
+	//boxes
+	private GameObject [] boxes;
 
 	//states
     private bool runActive = false;
@@ -25,6 +28,7 @@ public class PlayerController : MonoBehaviour {
 
 	//abilities
 	public bool canGlide = true;
+	public bool canDiveBomb = false;
 
 	//timers
     private float runStart = 0f;
@@ -126,10 +130,12 @@ public class PlayerController : MonoBehaviour {
 
 		if(pJumpStart > 0 && Input.GetKeyDown(KeyCode.S)){
 			Jump(true);
+			canDiveBomb = true;
 		}
 
 		else if(Input.GetKeyDown(KeyCode.S) && crouching){
 			Jump(false);
+			canDiveBomb = true;
 		}
 
 		//gliding
@@ -141,6 +147,16 @@ public class PlayerController : MonoBehaviour {
 			EndGlide();
 		}
 
+		//DiveBomb
+		canDiveBomb = !grounded;
+
+		if(canDiveBomb && Input.GetKeyDown(KeyCode.A)){
+			DiveBomb();
+		}
+
+		else if (grounded){
+			EndDiveBomb();
+		}
         
     }
 
@@ -171,12 +187,28 @@ public class PlayerController : MonoBehaviour {
 	private void EndGlide(){
 		walkSpeed = 4;
 		rb.drag = 0;
-		f.force = new Vector3(0,0,0);
+		if(f.force.y > 0){
+			f.force = new Vector3(0,0,0);
+		}
+	}
+
+	private void DiveBomb(){
+		f.force = -Vector3.up * 50f;
+	}
+
+	private void EndDiveBomb(){
+		if(f.force.y < 0){
+			f.force = new Vector3(0,0,0);
+		}
 	}
 
 	private bool CheckGrounded(){
 		float DistanceToTheGround = GetComponent<Collider>().bounds.extents.y;
 		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + 0.1f);
 		return IsGrounded;
+	}
+
+	private void OnTriggerEnter(Collider other){
+	
 	}
 }
