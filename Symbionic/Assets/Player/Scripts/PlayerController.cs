@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject radar;
 	public GameObject blades;
 	public Collider boxCollider;
+	private UIController uic;
 	
 	//lists of interactables
 	private List<GameObject> boxes;
@@ -31,7 +32,6 @@ public class PlayerController : MonoBehaviour {
 	private bool crouching = false;
 	private bool grounded = true;
 	private bool updraftActive = false;
-	
 
 	//abilities
 	public bool canGlide = true;
@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour {
 		ac = GetComponent<Animator>();
 		sac = spring.GetComponent<Animator>();
 		bac = blades.GetComponent<Animator>();
+		uic = GetComponent<UIController>();
 		f = GetComponent<ConstantForce>();
 		boxes = new List<GameObject>();
 		magnetics = new List<GameObject>();
@@ -190,7 +191,7 @@ public class PlayerController : MonoBehaviour {
 		//squeak
 		if(canSqueak && Input.GetKeyDown(KeyCode.X)){
 			foreach(GameObject box in boxes){
-				box.GetComponent<BoxInteract>().Interact();
+				uic.SendCode(box.GetComponent<BoxInteract>().Interact());
 			}
 		}
 
@@ -226,7 +227,7 @@ public class PlayerController : MonoBehaviour {
 
 		if (Physics.SphereCast(transform.position, 2f, transform.forward, out hit, 2f)){
 			if(hit.transform.tag == "diggable"){
-				hit.transform.gameObject.GetComponent<Interactable>().Interact();
+				uic.SendCode(hit.transform.gameObject.GetComponent<Interactable>().Interact());
 			}
 		}
 	}

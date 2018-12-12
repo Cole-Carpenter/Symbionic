@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoxInteract : MonoBehaviour {
+public class DigInteract : Interactable {
 
-	public string code;
-	private Animator aic;
+	public string code = "";
 
 	// Use this for initialization
 	void Start () {
-		aic = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -17,8 +15,8 @@ public class BoxInteract : MonoBehaviour {
 		
 	}
 
-	public string Interact(){
-		aic.SetTrigger("open");
+	public override string Interact(){
+		gameObject.GetComponent<Renderer>().material.color = Color.black;
 		return code;
 	}
 }
