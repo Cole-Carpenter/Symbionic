@@ -14,27 +14,38 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody rb;
 	private Animator ac;
 	private Animator sac;
+	private Animator bac;
 	private ConstantForce f;
 	public GameObject spring;
+	public GameObject radar;
+	public GameObject blades;
+	public Collider boxCollider;
 	
-	//boxes
-	private GameObject [] boxes;
+	//lists of interactables
+	private List<GameObject> boxes;
+	private List<GameObject> magnetics;
 
 	//states
     private bool runActive = false;
     private bool running = false;
 	private bool crouching = false;
 	private bool grounded = true;
+	private bool updraftActive = false;
+	
 
 	//abilities
 	public bool canGlide = true;
 	public bool canDiveBomb = false;
+	public bool canUpdraft = true;
+	private bool canSqueak = false;
+	private bool canDig = true;
 
 	//timers
     private float runStart = 0f;
     private float leftStart = 0f;
     private float rightStart = 0f;
 	private float pJumpStart = 0f;
+	private float updraftTimer = 0f;
 
 	private MyMessageListener SerialControllerM;
 	// Use this for initialization
@@ -43,7 +54,10 @@ public class PlayerController : MonoBehaviour {
 		rb = GetComponent<Rigidbody>();
 		ac = GetComponent<Animator>();
 		sac = spring.GetComponent<Animator>();
+		bac = blades.GetComponent<Animator>();
 		f = GetComponent<ConstantForce>();
+		boxes = new List<GameObject>();
+		magnetics = new List<GameObject>();
 	}
 	
 	// Update is called once per frame
@@ -53,8 +67,16 @@ public class PlayerController : MonoBehaviour {
         leftStart -= Time.deltaTime;
         rightStart -= Time.deltaTime;
 		pJumpStart -= Time.deltaTime;
+		updraftTimer -= Time.deltaTime;
 
-		grounded = CheckGrounded();
+		if(CheckGrounded() == true){
+			grounded = true;
+			updraftActive = true;
+		}
+		else{
+			grounded = false;
+		}
+		
 
 		
 		//Running
@@ -119,9 +141,11 @@ public class PlayerController : MonoBehaviour {
 		//crouching and jumping
 		if(Input.GetKey(KeyCode.A)){
 			crouching = true;
+			ac.SetBool("crouch",true);
 		}
 		else{
 			crouching = false;
+			ac.SetBool("crouch",false);
 		}
 
 		if(Input.GetKeyUp(KeyCode.A)){
@@ -139,11 +163,16 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//gliding
-		else if(!grounded && Input.GetKey(KeyCode.S) && canGlide){
+		else if(!grounded && Input.GetKeyDown(KeyCode.S) && canGlide && canUpdraft && updraftActive){
+			updraftActive = false;
+			Updraft();
+		}
+
+		else if(!grounded && Input.GetKey(KeyCode.S) && canGlide && updraftTimer < 0){
 			Glide();
 		}
 
-		else{
+		else if(updraftTimer < 0){
 			EndGlide();
 		}
 
@@ -158,7 +187,71 @@ public class PlayerController : MonoBehaviour {
 			EndDiveBomb();
 		}
         
+		//squeak
+		if(canSqueak && Input.GetKeyDown(KeyCode.X)){
+			foreach(GameObject box in boxes){
+				box.GetComponent<BoxInteract>().Interact();
+			}
+		}
+
+		//Interact
+		if(Input.GetKeyDown(KeyCode.M)){
+			Interact();
+		}
+
+		//nibble
+		if(Input.GetKeyDown(KeyCode.N)){
+			Nibble();
+		}
+
+		//dig
+		if(canDig && Input.GetKeyDown(KeyCode.X)){
+			Dig();
+		}
+
+		//radar
+		if(Input.GetKeyDown(KeyCode.Z)){
+			radar.GetComponent<Radar>().Ping();
+		}
+
+		//magnet
+		if(Input.GetKey(KeyCode.F)){
+			foreach(GameObject magnetic in magnetics){
+				magnetic.transform.position = Vector3.MoveTowards(magnetic.transform.position, transform.position, .1f);
+			}
+		}
     }
+	private void Dig(){
+		RaycastHit hit;
+
+		if (Physics.SphereCast(transform.position, 2f, transform.forward, out hit, 2f)){
+			if(hit.transform.tag == "diggable"){
+				hit.transform.gameObject.GetComponent<Interactable>().Interact();
+			}
+		}
+	}
+
+	private void Nibble(){
+		
+		RaycastHit hit;
+
+		if (Physics.SphereCast(transform.position, 4f, transform.forward, out hit, 4f)){
+			if(hit.transform.tag == "bitable"){
+				hit.transform.gameObject.GetComponent<Interactable>().Interact();
+			}
+		}
+	}
+
+	private void Interact(){
+		
+		RaycastHit hit;
+
+		if (Physics.SphereCast(transform.position, 4f, transform.forward, out hit, 4f)){
+			if(hit.transform.tag == "interactable"){
+				hit.transform.gameObject.GetComponent<Interactable>().Interact();
+			}
+		}
+	}
 
 	private void Jump(bool super){
 		 
@@ -179,17 +272,33 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void Glide(){
+		blades.SetActive(true);
+		bac.SetBool("glide",true);
+		ac.SetBool("glide",true);
 		walkSpeed = runSpeed;
 		rb.drag = .75f;
 		f.force = Vector3.up * 8.5f;
 	}
 
 	private void EndGlide(){
+		blades.SetActive(false);
+		bac.SetBool("glide",false);
+		ac.SetBool("glide",false);
 		walkSpeed = 4;
 		rb.drag = 0;
 		if(f.force.y > 0){
 			f.force = new Vector3(0,0,0);
 		}
+	}
+
+	private void Updraft(){
+		blades.SetActive(true);
+		bac.SetBool("glide",true);
+		ac.SetBool("glide",true);
+		updraftTimer = 3f;
+		walkSpeed = runSpeed;
+		rb.drag = .75f;
+		f.force = Vector3.up * 20f;
 	}
 
 	private void DiveBomb(){
@@ -203,12 +312,28 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private bool CheckGrounded(){
-		float DistanceToTheGround = GetComponent<Collider>().bounds.extents.y;
+		float DistanceToTheGround = boxCollider.bounds.extents.y;
 		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + 0.1f);
 		return IsGrounded;
 	}
 
 	private void OnTriggerEnter(Collider other){
-	
+		if(other.tag == "box"){
+			boxes.Add(other.gameObject);
+		}
+		if(other.tag == "magnetic"){
+			magnetics.Add(other.gameObject);
+		}
+		print(magnetics);
+	}
+
+	private void OnTriggerExit(Collider other){
+		if(other.tag == "box"){
+			boxes.Remove(other.gameObject);
+		}
+		if(other.tag == "magnetic"){
+			magnetics.Remove(other.gameObject);
+		}
+		print(magnetics);
 	}
 }
