@@ -160,8 +160,8 @@ public class MyMessageListener : MonoBehaviour {
 
     void OnMessageArrived(string m)
     {
-        TestCommands(m);
-        Debug.Log("Arrived: " + m);
+        //TestCommands(m);
+        //Debug.Log("Arrived: " + m);
 
     }
     void OnConnectionEvent(bool s)
