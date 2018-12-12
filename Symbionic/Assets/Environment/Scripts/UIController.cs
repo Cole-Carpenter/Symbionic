@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class CheeseInteract : Interactable {
+public class UIController : MonoBehaviour {
+	
+	public Text codeboard;
 
 	// Use this for initialization
 	void Start () {
@@ -14,7 +17,7 @@ public class CheeseInteract : Interactable {
 		
 	}
 
-	public override void Interact(){
-		print("get ate");
+	public void SendCode(string code){
+		codeboard.text = code;
 	}
 }
