@@ -12,22 +12,31 @@ public class PlayerController : MonoBehaviour {
 
 	//components
 	private Rigidbody rb;
+	private Animator ac;
+	private ConstantForce f;
 
 	//states
     private bool runActive = false;
     private bool running = false;
 	private bool crouching = false;
+	private bool grounded = true;
+
+	//abilities
+	public bool canGlide = true;
 
 	//timers
     private float runStart = 0f;
     private float leftStart = 0f;
     private float rightStart = 0f;
+	private float pJumpStart = 0f;
 
 	private MyMessageListener SerialControllerM;
 	// Use this for initialization
 	void Start () {
 		SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
 		rb = GetComponent<Rigidbody>();
+		ac = GetComponent<Animator>();
+		f = GetComponent<ConstantForce>();
 	}
 	
 	// Update is called once per frame
@@ -36,8 +45,11 @@ public class PlayerController : MonoBehaviour {
         runStart -= Time.deltaTime;
         leftStart -= Time.deltaTime;
         rightStart -= Time.deltaTime;
+		pJumpStart -= Time.deltaTime;
 
-		Debug.Log(SerialControllerM.Q);
+		grounded = CheckGrounded();
+
+		//Debug.Log(SerialControllerM.Q);
 
 		
 		//Running
@@ -53,12 +65,15 @@ public class PlayerController : MonoBehaviour {
 
         if (runActive && rightStart > 0 && leftStart > 0)
         {
+			ac.SetBool("running",true);
             running = true;
         }
 
         else if (rightStart > 0 && leftStart > 0)
         {
             runActive = true;
+			leftStart = 0;
+			rightStart = 0;
             runStart = .7f;
         }
 
@@ -66,6 +81,7 @@ public class PlayerController : MonoBehaviour {
         {
             runActive = false;
             running = false;
+			ac.SetBool("running",false);
         }
 
         if (running)
@@ -76,18 +92,24 @@ public class PlayerController : MonoBehaviour {
 		//walking and turning
         if (!running && (Input.GetKey(KeyCode.Q) ||  SerialControllerM.Q) && (Input.GetKey(KeyCode.W) || SerialControllerM.W))
         {
+			ac.SetBool("walking", true);
             transform.position += transform.forward * walkSpeed * Time.deltaTime;
         }
 
         else if (!running && (Input.GetKey(KeyCode.Q) ||  SerialControllerM.Q))
         {
+			ac.SetBool("walking", true);
             transform.Rotate(Vector3.down * rotateSpeed * Time.deltaTime);
         }
 
         else if (!running && (Input.GetKey(KeyCode.W) || SerialControllerM.W))
         {
+			ac.SetBool("walking", true);
             transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
         }
+		else{
+			ac.SetBool("walking", false);
+		}
 
 		//crouching and jumping
 		if(Input.GetKey(KeyCode.A)){
@@ -97,20 +119,59 @@ public class PlayerController : MonoBehaviour {
 			crouching = false;
 		}
 
-		if(Input.GetKey(KeyCode.S) && crouching){
-			Jump();
+		if(Input.GetKeyUp(KeyCode.A)){
+			pJumpStart = .1f;
+		}
+
+		if(pJumpStart > 0 && Input.GetKeyDown(KeyCode.S)){
+			ac.SetTrigger("jump");
+			Jump(true);
+		}
+
+		else if(Input.GetKeyDown(KeyCode.S) && crouching){
+			ac.SetTrigger("jump");
+			Jump(false);
+		}
+
+		//gliding
+		else if(!grounded && Input.GetKey(KeyCode.S) && canGlide){
+			Glide();
+		}
+
+		else{
+			EndGlide();
 		}
 
         
     }
 
-	private void Jump(){
-		 float DisstanceToTheGround = GetComponent<Collider>().bounds.extents.y;
- 
-         bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DisstanceToTheGround + 0.1f);
+	private void Jump(bool super){
+		 
+		 float height;
 
-		 if(IsGrounded){
-		 	 rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
+		 if(super){
+		 	 height = jumpSpeed * 2;
 		 }
+		 else{
+		 	 height = jumpSpeed;
+		 }
+
+		 if(grounded){
+		 	 rb.AddForce(Vector3.up * height, ForceMode.Impulse);
+		 }
+	}
+
+	private void Glide(){
+		f.force = Vector3.up * 3f;
+	}
+
+	private void EndGlide(){
+		f.force = new Vector3(0,0,0);
+	}
+
+	private bool CheckGrounded(){
+		float DisstanceToTheGround = GetComponent<Collider>().bounds.extents.y;
+		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DisstanceToTheGround + 0.1f);
+		return IsGrounded;
 	}
 }
