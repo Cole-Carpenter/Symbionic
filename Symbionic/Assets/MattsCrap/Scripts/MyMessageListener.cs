@@ -161,7 +161,7 @@ public class MyMessageListener : MonoBehaviour {
     void OnMessageArrived(string m)
     {
 
-        Debug.Log("Arrived: " + m);
+       // Debug.Log("Arrived: " + m);
 
     }
     void OnConnectionEvent(bool s)
