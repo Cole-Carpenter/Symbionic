@@ -9,6 +9,7 @@ TagManager:
   - bitable
   - diggable
   - magnetic
+  - chain
   layers:
   - Default
   - TransparentFX
