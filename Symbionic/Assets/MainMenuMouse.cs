@@ -5,6 +5,7 @@ using UnityEngine;
 public class MainMenuMouse : MonoBehaviour {
     private Animator ac;
     public Transform[] target;
+    public Transform cameraTarget;
 
     private bool moving = true;
     public float walkSpeed;
@@ -20,6 +21,13 @@ public class MainMenuMouse : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (index == target.Length)
+        {
+            moving = false;
+            ac.SetBool("walking", false);
+        }
+        Quaternion _look;
+
         if (moving)
         {
             ac.SetBool("walking", true);
@@ -30,21 +38,24 @@ public class MainMenuMouse : MonoBehaviour {
             transform.position = Vector3.MoveTowards(transform.position, target[index].position, step);
             Vector3 _dir = (transform.position - target[index].position).normalized;
 
-            Quaternion _look = Quaternion.LookRotation(-_dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, _look, Time.deltaTime * rotSpeed);
+            _look = Quaternion.LookRotation(-_dir);
         }
+        else
+        {
+            ac.SetBool("idle", true);
+            Vector3 _dir = (transform.position - cameraTarget.position).normalized;
+            _look = Quaternion.LookRotation(-_dir);
+
+        }
+        transform.rotation = Quaternion.Slerp(transform.rotation, _look, Time.deltaTime * rotSpeed);
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "chain")
         {
+            other.enabled = false;
             index++;
-            if(index == target.Length)
-            {
-                moving = false;
-                ac.SetBool("walking", false);
-                ac.SetBool("idle", true);
-            }
+           
         }
     }
     }
