@@ -9,9 +9,12 @@ public class Radar : MonoBehaviour {
 	private float timer = 0;
 	private float queue = 0;
 
+    private AudioSource aso;
+
 	// Use this for initialization
 	void Start () {
 		boxes = new List<GameObject>();
+        aso = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -21,7 +24,7 @@ public class Radar : MonoBehaviour {
 		if(timer < 0){
 			timer = 3f;
 			if(queue > 0){
-				print("playsound");
+                aso.Play();
 				queue--;
 			}
 		}

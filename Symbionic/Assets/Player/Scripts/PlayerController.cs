@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour {
 	private Animator ac;
 	private Animator sac;
 	private Animator bac;
+    private AudioSource aso;
 	private ConstantForce f;
 	public GameObject spring;
 	public GameObject radar;
@@ -61,6 +62,7 @@ public class PlayerController : MonoBehaviour {
 		SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
 		rb = GetComponent<Rigidbody>();
 		ac = GetComponent<Animator>();
+        aso = GetComponent<AudioSource>();
 		sac = spring.GetComponent<Animator>();
 		bac = blades.GetComponent<Animator>();
 		uic = GetComponent<UIController>();
@@ -209,7 +211,8 @@ public class PlayerController : MonoBehaviour {
         
 		//squeak
 		if(canSqueak && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7))){
-			foreach(GameObject box in boxes){
+            aso.Play();
+            foreach (GameObject box in boxes){
 				uic.SendCode(box.GetComponent<BoxInteract>().Interact());
 			}
 		}

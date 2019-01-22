@@ -8,9 +8,9 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications: []
     m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 0}
+  m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1269112680135110}
-  m_IsPrefabAsset: 1
+  m_IsPrefabParent: 1
 --- !u!1 &1209486673293896
 GameObject:
   m_ObjectHideFlags: 1
@@ -182,8 +182,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e44af8091779fcb40801d5b284353dbe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Target: {fileID: 0}
   m_AutoTargetPlayer: 1
   m_UpdateType: 0
@@ -203,8 +203,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94b04ec3bda6b7747aa53936ef3b0ae2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   clipMoveTime: 0.05
   returnTime: 0.4
   sphereCastRadius: 0.1
