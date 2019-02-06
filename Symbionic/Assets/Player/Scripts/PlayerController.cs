@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour {
 	private MyMessageListener SerialControllerM;
 	// Use this for initialization
 	void Start () {
-		SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
+		//SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
 		rb = GetComponent<Rigidbody>();
 		ac = GetComponent<Animator>();
         aso = GetComponent<AudioSource>();

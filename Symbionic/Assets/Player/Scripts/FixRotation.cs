@@ -8,6 +8,7 @@ public class FixRotation : MonoBehaviour {
 	private Vector3 normal = Vector3.up;
 	private Vector3 lastNormal = Vector3.up;
 	RaycastHit hit;
+    Quaternion sketch;
 
 	void Start(){
 		distToGround = GetComponent<Collider>().bounds.extents.y;
@@ -15,15 +16,10 @@ public class FixRotation : MonoBehaviour {
 
 	void Update()
 	{
-		if (Physics.Raycast(transform.position, -transform.up, out hit,  distToGround + 0.2f)){
+		if (Physics.Raycast(transform.position, -Vector3.up, out hit,  distToGround + 10f)){
 			normal = hit.normal;
 		}
-
-		if(normal != lastNormal){
-			transform.rotation = Quaternion.FromToRotation (transform.rotation.eulerAngles, normal);
-		}
-		
-		lastNormal = normal;
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.FromToRotation(transform.up, normal) * transform.rotation, Time.deltaTime * 3f);
     }
 
 }
