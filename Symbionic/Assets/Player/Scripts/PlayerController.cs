@@ -221,10 +221,6 @@ public class PlayerController : MonoBehaviour {
 		if(canDiveBomb && (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2))){
 			DiveBomb();
 		}
-
-		else if (grounded){
-			EndDiveBomb();
-		}
         
 		//squeak
 		if(canSqueak && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7))){
@@ -343,12 +339,6 @@ public class PlayerController : MonoBehaviour {
 
 	private void DiveBomb(){
 		f.force = -Vector3.up * 50f;
-	}
-
-	private void EndDiveBomb(){
-		if(f.force.y < 0){
-			f.force = new Vector3(0,0,0);
-		}
 	}
 
 	private bool CheckGrounded(){
