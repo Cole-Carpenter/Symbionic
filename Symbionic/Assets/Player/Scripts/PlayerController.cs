@@ -55,8 +55,10 @@ public class PlayerController : MonoBehaviour {
     private float rightStart = 0f;
 	private float pJumpStart = 0f;
 	private float updraftTimer = 0f;
+    private float groundStableTimer = 0f;
+    private bool groundTimerSet = false;
 
-	private MyMessageListener SerialControllerM;
+    private MyMessageListener SerialControllerM;
 	// Use this for initialization
 	void Start () {
 		//SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
@@ -90,14 +92,29 @@ public class PlayerController : MonoBehaviour {
         rightStart -= Time.deltaTime;
 		pJumpStart -= Time.deltaTime;
 		updraftTimer -= Time.deltaTime;
+        groundStableTimer -= Time.deltaTime;
 
 		if(CheckGrounded() == true){
 			grounded = true;
+            if (groundTimerSet)
+            {
+                groundStableTimer = 5f;
+                groundTimerSet = false;
+            }
 			updraftActive = true;
-		}
+            if (groundStableTimer < 0)
+            {
+                f.force = new Vector3(0, 0, 0);
+            } 
+        }
 		else{
 			grounded = false;
-		}
+            groundTimerSet = true;
+            if (f.force.y == 0)
+            {
+                f.force = -Vector3.up * 25f;
+            }
+        }
 		
 
 		
@@ -277,7 +294,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void Jump(bool super){
-		 
+         print("here");
 		 float height;
 
 		 if(super){
