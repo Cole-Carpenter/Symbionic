@@ -165,12 +165,14 @@ public class PlayerController : MonoBehaviour {
         else if (!running && (Input.GetKey(KeyCode.Q) ||  Input.GetKey(KeyCode.JoystickButton0)))
         {
 			ac.SetBool("walking", true);
+            transform.position += transform.forward * walkSpeed * Time.deltaTime;
             transform.Rotate(Vector3.down * rotateSpeed * Time.deltaTime);
         }
 
         else if (!running && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
 			ac.SetBool("walking", true);
+            transform.position += transform.forward * walkSpeed * Time.deltaTime;
             transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
         }
 		else{
