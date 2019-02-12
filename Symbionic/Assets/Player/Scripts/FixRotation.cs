@@ -21,8 +21,6 @@ public class FixRotation : MonoBehaviour {
         sketch = Quaternion.FromToRotation(transform.up, normal);
         sketch = sketch * transform.rotation;
 
-        print(sketch.eulerAngles.z);
-        print(sketch.eulerAngles.x);
         transform.rotation = Quaternion.Lerp(transform.rotation, sketch, Time.deltaTime * 3f);
         
         //if(transform.rotation.e)  

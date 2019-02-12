@@ -180,6 +180,9 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//crouching and jumping
+        if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2)){
+            pJumpStart = 3f;
+        }
 		if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton2)){
 			crouching = true;
 			ac.SetBool("crouch",true);
@@ -188,20 +191,17 @@ public class PlayerController : MonoBehaviour {
 			crouching = false;
 			ac.SetBool("crouch",false);
 		}
-
-		if(Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.JoystickButton2)){
-			pJumpStart = .1f;
-		}
-
-		if(pJumpStart > 0 && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3))){
-			Jump(true);
-			canDiveBomb = true;
-		}
-
-		else if((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && crouching){
+        if ((pJumpStart < 0 && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3))) && crouching)
+        {
+            Jump(true);
+            canDiveBomb = true;
+            pJumpStart = 3f;
+        }
+        else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && crouching){
 			Jump(false);
 			canDiveBomb = true;
-		}
+            pJumpStart = 3f;
+        }
 
 		//gliding
 		else if(!grounded && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && canGlide && canUpdraft && updraftActive){
@@ -225,7 +225,7 @@ public class PlayerController : MonoBehaviour {
 		}
         
 		//squeak
-		if(canSqueak && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7))){
+		if(canSqueak && (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.JoystickButton7))){
             aso.Play();
             foreach (GameObject box in boxes){
 				uic.SendCode(box.GetComponent<BoxInteract>().Interact());
@@ -238,7 +238,7 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//nibble
-		if(Input.GetKeyDown(KeyCode.N)|| Input.GetKeyDown(KeyCode.JoystickButton5)){
+		if(Input.GetKeyDown(KeyCode.Z)|| Input.GetKeyDown(KeyCode.JoystickButton5)){
 			Nibble();
 		}
 
@@ -248,12 +248,12 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//radar
-		if(canRadar && (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.JoystickButton8))){
+		if(canRadar && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton8))){
 			radar.GetComponent<Radar>().Ping();
 		}
 
 		//magnet
-		if(canMagnet && Input.GetKey(KeyCode.Z)){
+		if(canMagnet && Input.GetKey(KeyCode.X)){
 			foreach(GameObject magnetic in magnetics){
 				magnetic.transform.position = Vector3.MoveTowards(magnetic.transform.position, transform.position, .1f);
 			}
