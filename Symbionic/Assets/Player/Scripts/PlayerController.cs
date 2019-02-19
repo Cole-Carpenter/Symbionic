@@ -12,14 +12,10 @@ public class PlayerController : MonoBehaviour {
 
 	//components
 	private Rigidbody rb;
-	private Animator ac;
-	private Animator sac;
-	private Animator bac;
+    private Animator ac;
     private AudioSource aso;
 	private ConstantForce f;
-	public GameObject spring;
 	public GameObject radar;
-	public GameObject blades;
 	public Collider boxCollider;
 	private UIController uic;
 	
@@ -63,8 +59,6 @@ public class PlayerController : MonoBehaviour {
 		rb = GetComponent<Rigidbody>();
 		ac = GetComponent<Animator>();
         aso = GetComponent<AudioSource>();
-		sac = spring.GetComponent<Animator>();
-		bac = blades.GetComponent<Animator>();
 		uic = GetComponent<UIController>();
 		f = GetComponent<ConstantForce>();
 		boxes = new List<GameObject>();
@@ -94,6 +88,7 @@ public class PlayerController : MonoBehaviour {
 
 		if(CheckGrounded() == true){
 			grounded = true;
+            ac.SetBool("grounded", true);
             if (groundTimerSet)
             {
                 groundStableTimer = 5f;
@@ -107,10 +102,11 @@ public class PlayerController : MonoBehaviour {
         }
 		else{
 			grounded = false;
+            ac.SetBool("grounded", false);
             groundTimerSet = true;
             if (f.force.y == 0)
             {
-                f.force = -Vector3.up * 25f;
+                f.force = -Vector3.up * 15f;
             }
         }
 		
@@ -192,12 +188,10 @@ public class PlayerController : MonoBehaviour {
         if ((pJumpStart < 0 && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3))) && crouching)
         {
             Jump(true);
-            canDiveBomb = true;
             pJumpStart = 3f;
         }
         else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && crouching){
-			Jump(false);
-			canDiveBomb = true;
+            Jump(false);
             pJumpStart = 3f;
         }
 
@@ -211,14 +205,13 @@ public class PlayerController : MonoBehaviour {
 			Glide();
 		}
 
-		else if(updraftTimer < 0){
+		/*else if(updraftTimer < 0){
 			EndGlide();
-		}
+		}*/
 
 		//DiveBomb
-		canDiveBomb = !grounded;
 
-		if(canDiveBomb && (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2))){
+		if(canDiveBomb && (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2) && !grounded)){
 			DiveBomb();
 		}
         
@@ -290,7 +283,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void Jump(bool super){
-         print("here");
 		 float height;
 
 		 if(super){
@@ -299,37 +291,30 @@ public class PlayerController : MonoBehaviour {
 		 else{
 		 	 height = jumpSpeed;
 		 }
-
+         
 		 if(grounded){
 			ac.SetTrigger("jump");
-			sac.SetTrigger("jump");
 		 	rb.AddForce(Vector3.up * height, ForceMode.Impulse);
 		 }
 	}
 
 	private void Glide(){
-		blades.SetActive(true);
-		bac.SetBool("glide",true);
 		ac.SetBool("glide",true);
 		walkSpeed = runSpeed;
 		rb.drag = .75f;
 		f.force = Vector3.up * 8.5f;
 	}
 
-	private void EndGlide(){
-		blades.SetActive(false);
-		bac.SetBool("glide",false);
+	/*private void EndGlide(){
 		ac.SetBool("glide",false);
 		walkSpeed = 4;
 		rb.drag = 0;
 		if(f.force.y > 0){
-			f.force = new Vector3(0,0,0);
+			f.force = new Vector3(0,-25,0);
 		}
-	}
+	}*/
 
 	private void Updraft(){
-		blades.SetActive(true);
-		bac.SetBool("glide",true);
 		ac.SetBool("glide",true);
 		updraftTimer = 3f;
 		walkSpeed = runSpeed;
@@ -343,7 +328,7 @@ public class PlayerController : MonoBehaviour {
 
 	private bool CheckGrounded(){
 		float DistanceToTheGround = boxCollider.bounds.extents.y;
-		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + 0.1f);
+		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + .01f);
 		return IsGrounded;
 	}
 
@@ -354,7 +339,6 @@ public class PlayerController : MonoBehaviour {
 		if(other.tag == "magnetic"){
 			magnetics.Add(other.gameObject);
 		}
-		//print(magnetics);
 	}
 
 	private void OnTriggerExit(Collider other){
@@ -364,6 +348,5 @@ public class PlayerController : MonoBehaviour {
 		if(other.tag == "magnetic"){
 			magnetics.Remove(other.gameObject);
 		}
-		//print(magnetics);
 	}
 }
