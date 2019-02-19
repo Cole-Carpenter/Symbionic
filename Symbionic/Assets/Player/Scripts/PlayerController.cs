@@ -42,14 +42,12 @@ public class PlayerController : MonoBehaviour {
 	//abilities USB
 		//Organic
 	public bool canSqueak = true;
-	public bool canDig = false;
 	public bool canBlood = false; // Not added yet
 		//Mechanical
-	public bool canRadar = true;
-	public bool canMagnet = false;
 	public bool canOil = false; //Not added yet
+    public States usbState = (States)0;
 
-	//timers
+    //timers
     private float runStart = 0f;
     private float leftStart = 0f;
     private float rightStart = 0f;
@@ -243,17 +241,17 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//dig
-		if(canDig && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7))){
+		if(usbState == (States)2 && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7))){
 			Dig();
 		}
 
 		//radar
-		if(canRadar && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton8))){
+		if(usbState == (States)0 && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton8))){
 			radar.GetComponent<Radar>().Ping();
 		}
 
 		//magnet
-		if(canMagnet && Input.GetKey(KeyCode.X)){
+		if(usbState == (States)1 && Input.GetKey(KeyCode.X)){
 			foreach(GameObject magnetic in magnetics){
 				magnetic.transform.position = Vector3.MoveTowards(magnetic.transform.position, transform.position, .1f);
 			}
