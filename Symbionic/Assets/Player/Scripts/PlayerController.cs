@@ -250,6 +250,7 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
     }
+
 	private void Dig(){
 		RaycastHit hit;
 
