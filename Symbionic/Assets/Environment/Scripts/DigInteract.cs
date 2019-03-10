@@ -15,7 +15,8 @@ public class DigInteract : Interactable {
 		
 	}
 
-	public override string Interact(){
+	public override string Interact(Transform players)
+    {
 		gameObject.GetComponent<Renderer>().material.color = Color.black;
 		return code;
 	}

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Interactable : MonoBehaviour {
+public static class FloatArrayExtensions {
 
 	// Use this for initialization
 	void Start () {
@@ -12,9 +12,5 @@ public class Interactable : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-	}
-
-	public virtual string Interact(Transform player){
-		return "";
 	}
 }

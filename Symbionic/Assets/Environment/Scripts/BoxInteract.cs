@@ -17,7 +17,8 @@ public class BoxInteract : MonoBehaviour {
 		
 	}
 
-	public string Interact(){
+	public string Interact(Transform player)
+    {
 		aic.SetTrigger("open");
 		return code;
 	}

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Tubes : Interactable {
 
     public List<Transform> Nodes;
-    public Transform player;
+    public Transform playerT;
     private Transform nextNode;
     private bool activated = false;
 
@@ -18,12 +18,16 @@ public class Tubes : Interactable {
 	void Update () {
         if (activated)
         {
-            player.position = Vector3.Lerp(player.position, nextNode.position, 1f);
+            playerT.position = Vector3.Lerp(playerT.position, nextNode.position, 1f);
         }
+
+        print("");
 	}
 
-    public override string Interact()
+    public override string Interact(Transform player)
     {
-        return base.Interact();
+        activated = true;
+        playerT = player;
+        return"";
     }
 }

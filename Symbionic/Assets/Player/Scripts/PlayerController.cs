@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour {
 		if(canSqueak && (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.JoystickButton7))){
             aso.Play();
             foreach (GameObject box in boxes){
-				uic.SendCode(box.GetComponent<BoxInteract>().Interact());
+				uic.SendCode(box.GetComponent<BoxInteract>().Interact(null));
 			}
 		}
 
@@ -256,7 +256,7 @@ public class PlayerController : MonoBehaviour {
 
 		if (Physics.SphereCast(transform.position, 2f, transform.forward, out hit, 2f)){
 			if(hit.transform.tag == "diggable"){
-				uic.SendCode(hit.transform.gameObject.GetComponent<Interactable>().Interact());
+				uic.SendCode(hit.transform.gameObject.GetComponent<Interactable>().Interact(transform));
 			}
 		}
 	}
@@ -267,7 +267,7 @@ public class PlayerController : MonoBehaviour {
 
 		if (Physics.SphereCast(transform.position, 4f, transform.forward, out hit, 4f)){
 			if(hit.transform.tag == "bitable"){
-				hit.transform.gameObject.GetComponent<Interactable>().Interact();
+				hit.transform.gameObject.GetComponent<Interactable>().Interact(transform);
 			}
 		}
 	}
@@ -278,7 +278,7 @@ public class PlayerController : MonoBehaviour {
 
 		if (Physics.SphereCast(transform.position, 4f, transform.forward, out hit, 4f)){
 			if(hit.transform.tag == "interactable"){
-				hit.transform.gameObject.GetComponent<Interactable>().Interact();
+				hit.transform.gameObject.GetComponent<Interactable>().Interact(transform);
 			}
 		}
 	}
