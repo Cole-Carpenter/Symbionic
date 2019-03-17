@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour {
     private Animator ac;
     private AudioSource aso;
     private ConstantForce f;
+    private Collider magnetMask;
     public GameObject radar;
     public Renderer track;
     public Collider boxCollider;
@@ -22,7 +23,7 @@ public class PlayerController : MonoBehaviour {
 
     //lists of interactables
     private List<GameObject> boxes;
-    private List<GameObject> magnetics;
+    private List<Rigidbody> magnetics;
 
     //states
     private bool gliding;
@@ -40,9 +41,6 @@ public class PlayerController : MonoBehaviour {
     //abilities USB
     //Organic
     public bool canSqueak = true;
-    public bool canBlood = false; // Not added yet
-                                  //Mechanical
-    public bool canOil = false; //Not added yet
     public States usbState = (States)0;
 
     //timers
@@ -51,8 +49,6 @@ public class PlayerController : MonoBehaviour {
     private float rightStart = 0f;
     private float pJumpStart = 0f;
     private float updraftTimer = 0f;
-    private float groundStableTimer = 0f;
-    private bool groundTimerSet = false;
 
     private MyMessageListener SerialControllerM;
     // Use this for initialization
@@ -64,7 +60,8 @@ public class PlayerController : MonoBehaviour {
         uic = GetComponent<UIController>();
         f = GetComponent<ConstantForce>();
         boxes = new List<GameObject>();
-        magnetics = new List<GameObject>();
+        magnetMask = transform.Find("MagnetMask").GetComponent<SphereCollider>();
+        magnetics = new List<Rigidbody>();
     }
     /*
 	 0f - left
@@ -86,7 +83,6 @@ public class PlayerController : MonoBehaviour {
         rightStart -= Time.deltaTime;
         pJumpStart -= Time.deltaTime;
         updraftTimer -= Time.deltaTime;
-        groundStableTimer -= Time.deltaTime;
 
         if (CheckGrounded() == true) {
             grounded = true;
@@ -96,7 +92,6 @@ public class PlayerController : MonoBehaviour {
         else {
             grounded = false;
             ac.SetBool("grounded", false);
-            groundTimerSet = true;
         }
 
 
@@ -195,12 +190,12 @@ public class PlayerController : MonoBehaviour {
         }
 
         //gliding
-        else if (!grounded && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && canGlide && canUpdraft && updraftActive) {
+        if (!grounded && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && canUpdraft && updraftActive && canGlide) {
             updraftActive = false;
             Updraft();
         }
 
-        else if (!grounded && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton3)) && canGlide && updraftTimer < 0) {
+        if (!grounded && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton3)) && canGlide) {
             Glide();
         }
 
@@ -242,12 +237,34 @@ public class PlayerController : MonoBehaviour {
 			radar.GetComponent<Radar>().Ping();
 		}
 
-		//magnet
-		if(usbState == (States)1 && Input.GetKey(KeyCode.X)){
-			foreach(GameObject magnetic in magnetics){
-				magnetic.transform.position = Vector3.MoveTowards(magnetic.transform.position, transform.position, .1f);
-			}
-		}
+        //magnet
+        if (usbState == (States)1 && Input.GetKey(KeyCode.X))
+        {
+            foreach (Rigidbody magnetic in magnetics)
+            {
+                if(magnetic.gameObject.transform.parent == transform)
+                {
+                    magnetic.transform.rotation = magnetic.transform.rotation * Quaternion.Euler(new Vector3(50f, 50f, 50f) * Time.deltaTime);
+                }
+                else if (magnetic.gameObject.transform.parent != transform && magnetMask.bounds.Contains(magnetic.position))
+                {
+                    magnetic.gameObject.transform.parent = transform;
+                    magnetic.isKinematic = true;
+                }
+                else if (magnetic.gameObject.transform.parent != transform && !magnetMask.bounds.Contains(magnetic.position))
+                {
+                    magnetic.MovePosition(Vector3.MoveTowards(magnetic.position, rb.position, .25f));
+                }
+            }
+        }
+        else if(!Input.GetKey(KeyCode.X))
+        {
+            foreach (Rigidbody magnetic in magnetics)
+            {
+                magnetic.isKinematic = false;
+                magnetic.gameObject.transform.parent = null;
+            }
+        }
     }
 
 	private void Dig(){
@@ -302,7 +319,7 @@ public class PlayerController : MonoBehaviour {
         gliding = true;
 		ac.SetBool("glide",true);
 		walkSpeed = runSpeed;
-		f.force = Vector3.up * -3f;
+		f.force = Vector3.up * 4.9f;
 	}
 
 	private void EndGlide(){
@@ -314,11 +331,9 @@ public class PlayerController : MonoBehaviour {
 
 	private void Updraft(){
 		ac.SetBool("glide",true);
-		updraftTimer = 3f;
 		walkSpeed = runSpeed;
-		rb.drag = .75f;
-		f.force = Vector3.up * 20f;
-	}
+        rb.AddForce(Vector3.up * 10f, ForceMode.Impulse);
+    }
 
 	private void DiveBomb(){
 		f.force = -Vector3.up * 50f;
@@ -333,7 +348,7 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
-            err = -.3f;
+            err = 0f;
         }
         Color rayColor;
 		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + err);
@@ -354,7 +369,7 @@ public class PlayerController : MonoBehaviour {
 			boxes.Add(other.gameObject);
 		}
 		if(other.tag == "magnetic"){
-			magnetics.Add(other.gameObject);
+			magnetics.Add(other.gameObject.GetComponent<Rigidbody>());
 		}
 	}
 
@@ -363,7 +378,7 @@ public class PlayerController : MonoBehaviour {
 			boxes.Remove(other.gameObject);
 		}
 		if(other.tag == "magnetic"){
-			magnetics.Remove(other.gameObject);
+			magnetics.Remove(other.gameObject.GetComponent<Rigidbody>());
 		}
 	}
 }
