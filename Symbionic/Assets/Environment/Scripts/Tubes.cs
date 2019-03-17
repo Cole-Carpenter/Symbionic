@@ -67,8 +67,8 @@ public class Tubes : Interactable {
         else if (activated && firstPoint)
         {
             cam.transform.position = Vector3.Lerp(cam.transform.position, camPoint.position, 2f * Time.deltaTime);
-            Vector3 relativePos = playerRB.position - cam.transform.position;
-            //cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, Quaternion.LookRotation(relativePos, Vector3.up), 2f * Time.deltaTime);
+            Vector3 relativePos = playerT.position - cam.transform.position;
+            cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, Quaternion.LookRotation(relativePos, Vector3.up), 2f * Time.deltaTime);
             Vector3 newPos = spline.SplineMove(realSpeed, playerT);
             if(newPos == playerT.position)
             {
@@ -77,7 +77,7 @@ public class Tubes : Interactable {
             else
             {
                 playerT.LookAt(spline.GetNextPoint(), playerT.up);
-                playerRB.MovePosition(newPos);
+                playerT.position = newPos;
             }
         }
         if (!activated && awake)

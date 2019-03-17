@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour {
     private AudioSource maso;
     private ConstantForce f;
     private Collider magnetMask;
+    private MeshRenderer mMMeshRenderer;
     public GameObject radar;
     public Renderer track;
     public Collider boxCollider;
@@ -80,6 +81,7 @@ public class PlayerController : MonoBehaviour {
         f = GetComponent<ConstantForce>();
         boxes = new List<GameObject>();
         magnetMask = transform.Find("MagnetMask").GetComponent<SphereCollider>();
+        mMMeshRenderer = magnetMask.GetComponent<MeshRenderer>();
         magnetics = new List<Rigidbody>();
         walkSpeed *= 10f;
         defaultWalkSpeed = walkSpeed;
@@ -285,6 +287,7 @@ public class PlayerController : MonoBehaviour {
         {
             maso.clip = magnetClip;
             maso.Play();
+            mMMeshRenderer.enabled = true;
         }
         if (usbState == (States)1 && Input.GetKey(KeyCode.X))
         {
@@ -312,6 +315,7 @@ public class PlayerController : MonoBehaviour {
         else if(!Input.GetKey(KeyCode.X))
         {
             maso.Stop();
+            mMMeshRenderer.enabled = false;
             foreach (Rigidbody magnetic in magnetics)
             {
                 magnetic.isKinematic = false;
