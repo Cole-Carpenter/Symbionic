@@ -4,67 +4,69 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-	//speeds
+    //speeds
     public float rotateSpeed = 1f;
     public float walkSpeed = 1f;
     public float runSpeed = 1f;
-	public float jumpSpeed = 1f;
+    public float jumpSpeed = 1f;
 
-	//components
-	private Rigidbody rb;
+    //components
+    private Rigidbody rb;
     private Animator ac;
     private AudioSource aso;
-	private ConstantForce f;
-	public GameObject radar;
-	public Collider boxCollider;
-	private UIController uic;
-	
-	//lists of interactables
-	private List<GameObject> boxes;
-	private List<GameObject> magnetics;
+    private ConstantForce f;
+    public GameObject radar;
+    public Renderer track;
+    public Collider boxCollider;
+    private UIController uic;
 
-	//states
+    //lists of interactables
+    private List<GameObject> boxes;
+    private List<GameObject> magnetics;
+
+    //states
+    private bool gliding;
     private bool runActive = false;
     private bool running = false;
-	private bool crouching = false;
-	private bool grounded = true;
-	private bool updraftActive = false;
+    private bool crouching = false;
+    private bool grounded = true;
+    private bool updraftActive = false;
 
-	//abilities Unlockable
-	public bool canGlide = false;
-	public bool canDiveBomb = false;
-	public bool canUpdraft = false;
+    //abilities Unlockable
+    public bool canGlide = false;
+    public bool canDiveBomb = false;
+    public bool canUpdraft = false;
 
-	//abilities USB
-		//Organic
-	public bool canSqueak = true;
-	public bool canBlood = false; // Not added yet
-		//Mechanical
-	public bool canOil = false; //Not added yet
+    //abilities USB
+    //Organic
+    public bool canSqueak = true;
+    public bool canBlood = false; // Not added yet
+                                  //Mechanical
+    public bool canOil = false; //Not added yet
     public States usbState = (States)0;
 
     //timers
     private float runStart = 0f;
     private float leftStart = 0f;
     private float rightStart = 0f;
-	private float pJumpStart = 0f;
-	private float updraftTimer = 0f;
+    private float pJumpStart = 0f;
+    private float updraftTimer = 0f;
     private float groundStableTimer = 0f;
     private bool groundTimerSet = false;
 
     private MyMessageListener SerialControllerM;
-	// Use this for initialization
-	void Start () {
-		//SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
-		rb = GetComponent<Rigidbody>();
-		ac = GetComponent<Animator>();
+    // Use this for initialization
+    void Start() {
+        //SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
+        rb = GetComponent<Rigidbody>();
+        ac = GetComponentInChildren<Animator>();
         aso = GetComponent<AudioSource>();
-		uic = GetComponent<UIController>();
-		f = GetComponent<ConstantForce>();
-		boxes = new List<GameObject>();
-		magnetics = new List<GameObject>();
-	}
-	/*
+        uic = GetComponent<UIController>();
+        f = GetComponent<ConstantForce>();
+        boxes = new List<GameObject>();
+        magnetics = new List<GameObject>();
+    }
+    /*
 	 0f - left
 	 2 - crouch
 	 4 - Interact
@@ -76,32 +78,32 @@ public class PlayerController : MonoBehaviour {
 	 7 - Squeak / Dig
 
 	*/
-	// Update is called once per frame
-	void Update () {
-		//running timers
+    // Update is called once per frame
+    void Update() {
+        //running timers
         runStart -= Time.deltaTime;
         leftStart -= Time.deltaTime;
         rightStart -= Time.deltaTime;
-		pJumpStart -= Time.deltaTime;
-		updraftTimer -= Time.deltaTime;
+        pJumpStart -= Time.deltaTime;
+        updraftTimer -= Time.deltaTime;
         groundStableTimer -= Time.deltaTime;
 
-		if(CheckGrounded() == true){
-			grounded = true;
+        if (CheckGrounded() == true) {
+            grounded = true;
             ac.SetBool("grounded", true);
             if (groundTimerSet)
             {
                 groundStableTimer = 5f;
                 groundTimerSet = false;
             }
-			updraftActive = true;
+            updraftActive = true;
             if (groundStableTimer < 0)
             {
                 f.force = new Vector3(0, 0, 0);
-            } 
+            }
         }
-		else{
-			grounded = false;
+        else {
+            grounded = false;
             ac.SetBool("grounded", false);
             groundTimerSet = true;
             if (f.force.y == 0)
@@ -109,10 +111,10 @@ public class PlayerController : MonoBehaviour {
                 f.force = -Vector3.up * 15f;
             }
         }
-		
 
-		
-		//Running
+
+
+        //Running
         if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.JoystickButton0))
         {
             leftStart = .275f;
@@ -125,15 +127,16 @@ public class PlayerController : MonoBehaviour {
 
         if (runActive && rightStart > 0 && leftStart > 0)
         {
-			ac.SetBool("running",true);
+            ac.SetBool("running", true);
+            track.material.SetFloat("_Speed2", 12f);
             running = true;
         }
 
         else if (rightStart > 0 && leftStart > 0)
         {
             runActive = true;
-			leftStart = 0;
-			rightStart = 0;
+            leftStart = 0;
+            rightStart = 0;
             runStart = .7f;
         }
 
@@ -141,7 +144,8 @@ public class PlayerController : MonoBehaviour {
         {
             runActive = false;
             running = false;
-			ac.SetBool("running",false);
+            ac.SetBool("running", false);
+            track.material.SetFloat("_Speed2", 0f);
         }
 
         if (running)
@@ -149,65 +153,73 @@ public class PlayerController : MonoBehaviour {
             transform.position += transform.forward * runSpeed * Time.deltaTime;
         }
 
-		//walking and turning
-        if (!running && (Input.GetKey(KeyCode.Q) ||  Input.GetKey(KeyCode.JoystickButton0)) && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
+        //walking and turning
+        if (!running && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton0)) && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
-			ac.SetBool("walking", true);
+            ac.SetBool("walking", true);
+            track.material.SetFloat("_Speed2", 6f);
             transform.position += transform.forward * walkSpeed * Time.deltaTime;
         }
 
-        else if (!running && (Input.GetKey(KeyCode.Q) ||  Input.GetKey(KeyCode.JoystickButton0)))
+        else if (!running && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton0)))
         {
-			ac.SetBool("walking", true);
+            ac.SetBool("walking", true);
+            track.material.SetFloat("_Speed2", 6f);
             transform.position += transform.forward * walkSpeed * 0.5f * Time.deltaTime;
             transform.Rotate(Vector3.down * rotateSpeed * Time.deltaTime);
         }
 
         else if (!running && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
-			ac.SetBool("walking", true);
+            ac.SetBool("walking", true);
+            track.material.SetFloat("_Speed2", 6f);
             transform.position += transform.forward * walkSpeed * 0.5f * Time.deltaTime;
             transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
         }
-		else{
-			ac.SetBool("walking", false);
-		}
+        else if (running)
+        {
+            ac.SetBool("walking", false);
+        }
+        else {
+            ac.SetBool("walking", false);
+            track.material.SetFloat("_Speed2", 0f);
+        }
 
-		//crouching and jumping
-        if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2)){
+        //crouching and jumping
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2)) {
             pJumpStart = 3f;
         }
-		if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton2)){
-			crouching = true;
-			ac.SetBool("crouch",true);
-		}
-		else{
-			crouching = false;
-			ac.SetBool("crouch",false);
-		}
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton2)) {
+            crouching = true;
+            ac.SetBool("crouch", true);
+        }
+        else {
+            crouching = false;
+            ac.SetBool("crouch", false);
+        }
         if ((pJumpStart < 0 && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3))) && crouching)
         {
             Jump(true);
             pJumpStart = 3f;
         }
-        else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && crouching){
+        else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && crouching) {
             Jump(false);
             pJumpStart = 3f;
         }
 
-		//gliding
-		else if(!grounded && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && canGlide && canUpdraft && updraftActive){
-			updraftActive = false;
-			Updraft();
-		}
+        //gliding
+        else if (!grounded && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && canGlide && canUpdraft && updraftActive) {
+            updraftActive = false;
+            Updraft();
+        }
 
-		else if(!grounded && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton3)) && canGlide && updraftTimer < 0){
-			Glide();
-		}
+        else if (!grounded && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton3)) && canGlide && updraftTimer < 0) {
+            Glide();
+        }
 
-		/*else if(updraftTimer < 0){
+        else if ((updraftTimer < 0 && Input.GetKeyUp(KeyCode.S)) || grounded){
 			EndGlide();
-		}*/
+		}
 
 		//DiveBomb
 
@@ -300,20 +312,18 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void Glide(){
+        gliding = true;
 		ac.SetBool("glide",true);
 		walkSpeed = runSpeed;
-		rb.drag = .75f;
-		f.force = Vector3.up * 8.5f;
+		f.force = Vector3.up * -3f;
 	}
 
-	/*private void EndGlide(){
+	private void EndGlide(){
+        gliding = false;
 		ac.SetBool("glide",false);
 		walkSpeed = 4;
-		rb.drag = 0;
-		if(f.force.y > 0){
-			f.force = new Vector3(0,-25,0);
-		}
-	}*/
+        f.force = new Vector3(0, 0, 0);
+    }
 
 	private void Updraft(){
 		ac.SetBool("glide",true);
@@ -329,7 +339,16 @@ public class PlayerController : MonoBehaviour {
 
 	private bool CheckGrounded(){
 		float DistanceToTheGround = boxCollider.bounds.extents.y;
-		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + .01f);
+        float err;
+        if (gliding)
+        {
+            err = 5f;
+        }
+        else
+        {
+            err = .01f;
+        }
+		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + err);
 		return IsGrounded;
 	}
 

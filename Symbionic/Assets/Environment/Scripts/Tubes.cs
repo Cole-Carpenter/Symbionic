@@ -13,6 +13,7 @@ public class Tubes : Interactable {
     public float speed = 1f;
 
     private UnityStandardAssets.Cameras.FreeLookCam camScript;
+    private UnityStandardAssets.Cameras.ProtectCameraFromWallClip camScript2;
     private PlayerController playerScript;
     private Camera cam;
 
@@ -28,6 +29,7 @@ public class Tubes : Interactable {
     void Start () {
         spline = GetComponentInChildren<Spline>();
         camScript = camRig.GetComponent<UnityStandardAssets.Cameras.FreeLookCam>();
+        camScript2 = camRig.GetComponent<UnityStandardAssets.Cameras.ProtectCameraFromWallClip>();
         cam = Camera.main;
         playerScript = playerT.GetComponent<PlayerController>();
         realSpeed = speed / 10;
@@ -47,6 +49,7 @@ public class Tubes : Interactable {
         {
             camScript.SetTarget(null);
             camScript.enabled = false;
+            camScript2.enabled = false;
             playerScript.enabled = false;
             awake = true;
         }
@@ -58,7 +61,6 @@ public class Tubes : Interactable {
             Vector3 newPos = spline.SplineMove(t, playerT);
             if(newPos == playerT.position)
             {
-                print("here");
                 activated = false;
             }
             else
@@ -73,6 +75,7 @@ public class Tubes : Interactable {
             cam.transform.localPosition = new Vector3(0, 0, -15);
             cam.transform.localRotation = Quaternion.identity;
             camScript.enabled = true;
+            camScript2.enabled = true;
             camScript.SetTarget(playerT);
             playerScript.enabled = true;
             awake = false;
