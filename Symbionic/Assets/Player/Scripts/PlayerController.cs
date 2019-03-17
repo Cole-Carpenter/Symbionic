@@ -91,25 +91,12 @@ public class PlayerController : MonoBehaviour {
         if (CheckGrounded() == true) {
             grounded = true;
             ac.SetBool("grounded", true);
-            if (groundTimerSet)
-            {
-                groundStableTimer = 5f;
-                groundTimerSet = false;
-            }
             updraftActive = true;
-            if (groundStableTimer < 0)
-            {
-                f.force = new Vector3(0, 0, 0);
-            }
         }
         else {
             grounded = false;
             ac.SetBool("grounded", false);
             groundTimerSet = true;
-            if (f.force.y == 0)
-            {
-                f.force = -Vector3.up * 15f;
-            }
         }
 
 
@@ -150,7 +137,7 @@ public class PlayerController : MonoBehaviour {
 
         if (running)
         {
-            transform.position += transform.forward * runSpeed * Time.deltaTime;
+            rb.MovePosition(rb.position + transform.forward * runSpeed * Time.deltaTime);
         }
 
         //walking and turning
@@ -158,23 +145,23 @@ public class PlayerController : MonoBehaviour {
         {
             ac.SetBool("walking", true);
             track.material.SetFloat("_Speed2", 6f);
-            transform.position += transform.forward * walkSpeed * Time.deltaTime;
+            rb.MovePosition(rb.position + transform.forward * walkSpeed * Time.deltaTime);
         }
 
         else if (!running && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton0)))
         {
             ac.SetBool("walking", true);
             track.material.SetFloat("_Speed2", 6f);
-            transform.position += transform.forward * walkSpeed * 0.5f * Time.deltaTime;
-            transform.Rotate(Vector3.down * rotateSpeed * Time.deltaTime);
+            rb.MovePosition(rb.position + transform.forward * walkSpeed * Time.deltaTime);
+            rb.MoveRotation(rb.rotation * Quaternion.Euler(Vector3.down * rotateSpeed * Time.deltaTime));
         }
 
         else if (!running && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
             ac.SetBool("walking", true);
             track.material.SetFloat("_Speed2", 6f);
-            transform.position += transform.forward * walkSpeed * 0.5f * Time.deltaTime;
-            transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
+            rb.MovePosition(rb.position + transform.forward * walkSpeed * Time.deltaTime);
+            rb.MoveRotation(rb.rotation * Quaternion.Euler(Vector3.up * rotateSpeed * Time.deltaTime));
         }
         else if (running)
         {
@@ -346,10 +333,20 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
-            err = .01f;
+            err = -.3f;
         }
+        Color rayColor;
 		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + err);
-		return IsGrounded;
+        if (IsGrounded)
+        {
+            rayColor = Color.black;
+        }
+        else
+        {
+            rayColor = Color.red;
+        }
+        Debug.DrawRay(transform.position, Vector3.down.normalized * (DistanceToTheGround + err), rayColor, Time.deltaTime);
+        return IsGrounded;
 	}
 
 	private void OnTriggerEnter(Collider other){
