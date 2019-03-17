@@ -5,21 +5,37 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     //speeds
-    public float rotateSpeed = 1f;
+    public float rotateSpeed = 4f;
     public float walkSpeed = 1f;
+    private float defaultWalkSpeed;
     public float runSpeed = 1f;
+    public float sqrMaxVelocity = 1f;
     public float jumpSpeed = 1f;
+    private float glideSpeed;
 
     //components
     private Rigidbody rb;
     private Animator ac;
     private AudioSource aso;
+    private AudioSource gaso;
+    private AudioSource maso;
     private ConstantForce f;
     private Collider magnetMask;
     public GameObject radar;
     public Renderer track;
     public Collider boxCollider;
     private UIController uic;
+
+    //audio clips
+    public AudioClip squeakClip;
+    public AudioClip pJumpClip;
+    public AudioClip jumpClip;
+    public AudioClip diveBombClip;
+    public AudioClip glideClip;
+    public AudioClip nibbleClip;
+    public AudioClip updraftClip;
+    public AudioClip magnetClip;
+    public AudioClip digClip;
 
     //lists of interactables
     private List<GameObject> boxes;
@@ -32,6 +48,7 @@ public class PlayerController : MonoBehaviour {
     private bool crouching = false;
     private bool grounded = true;
     private bool updraftActive = false;
+    private bool pJumpStartSoundActive = false;
 
     //abilities Unlockable
     public bool canGlide = false;
@@ -57,11 +74,17 @@ public class PlayerController : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         ac = GetComponentInChildren<Animator>();
         aso = GetComponent<AudioSource>();
+        gaso = transform.Find("SymbionicIdle").GetComponent<AudioSource>();
+        maso = transform.Find("MagnetMask").GetComponent<AudioSource>();
         uic = GetComponent<UIController>();
         f = GetComponent<ConstantForce>();
         boxes = new List<GameObject>();
         magnetMask = transform.Find("MagnetMask").GetComponent<SphereCollider>();
         magnetics = new List<Rigidbody>();
+        walkSpeed *= 10f;
+        defaultWalkSpeed = walkSpeed;
+        runSpeed *= 1000f;
+        glideSpeed = walkSpeed * 2f;
     }
     /*
 	 0f - left
@@ -84,7 +107,7 @@ public class PlayerController : MonoBehaviour {
         pJumpStart -= Time.deltaTime;
         updraftTimer -= Time.deltaTime;
 
-        if (CheckGrounded() == true) {
+        if (CheckGrounded(.001f) == true) {
             grounded = true;
             ac.SetBool("grounded", true);
             updraftActive = true;
@@ -99,12 +122,12 @@ public class PlayerController : MonoBehaviour {
         //Running
         if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.JoystickButton0))
         {
-            leftStart = .275f;
+            leftStart = 30f * Time.deltaTime;
         }
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.JoystickButton1))
         {
-            rightStart = .275f;
+            rightStart = 30f * Time.deltaTime;
         }
 
         if (runActive && rightStart > 0 && leftStart > 0)
@@ -132,22 +155,25 @@ public class PlayerController : MonoBehaviour {
 
         if (running)
         {
-            rb.MovePosition(rb.position + transform.forward * runSpeed * Time.deltaTime);
+            if(rb.velocity.sqrMagnitude < sqrMaxVelocity)
+            {
+                rb.AddForce(transform.forward * runSpeed * Time.deltaTime, ForceMode.Acceleration);
+            }   
         }
 
         //walking and turning
-        if (!running && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton0)) && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
+        else if (!running && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton0)) && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
             ac.SetBool("walking", true);
             track.material.SetFloat("_Speed2", 6f);
-            rb.MovePosition(rb.position + transform.forward * walkSpeed * Time.deltaTime);
+            rb.AddForce(transform.forward * walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
         }
 
         else if (!running && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton0)))
         {
             ac.SetBool("walking", true);
             track.material.SetFloat("_Speed2", 6f);
-            rb.MovePosition(rb.position + transform.forward * walkSpeed * Time.deltaTime);
+            rb.AddForce(0.5f * transform.forward * walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
             rb.MoveRotation(rb.rotation * Quaternion.Euler(Vector3.down * rotateSpeed * Time.deltaTime));
         }
 
@@ -155,21 +181,26 @@ public class PlayerController : MonoBehaviour {
         {
             ac.SetBool("walking", true);
             track.material.SetFloat("_Speed2", 6f);
-            rb.MovePosition(rb.position + transform.forward * walkSpeed * Time.deltaTime);
+            rb.AddForce(0.5f * transform.forward * walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
             rb.MoveRotation(rb.rotation * Quaternion.Euler(Vector3.up * rotateSpeed * Time.deltaTime));
-        }
-        else if (running)
-        {
-            ac.SetBool("walking", false);
         }
         else {
             ac.SetBool("walking", false);
             track.material.SetFloat("_Speed2", 0f);
+            if(rb.velocity != new Vector3(0, 0, 0) && grounded)
+            {
+                rb.drag = 4f;
+            }
+            else
+            {
+                rb.drag = 1f;
+            }
         }
 
         //crouching and jumping
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2)) {
             pJumpStart = 3f;
+            pJumpStartSoundActive = true;
         }
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton2)) {
             crouching = true;
@@ -178,6 +209,13 @@ public class PlayerController : MonoBehaviour {
         else {
             crouching = false;
             ac.SetBool("crouch", false);
+        }
+
+        if(pJumpStart < 0f && pJumpStartSoundActive && crouching)
+        {
+            pJumpStartSoundActive = false;
+            aso.clip = pJumpClip;
+            aso.Play();
         }
         if ((pJumpStart < 0 && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3))) && crouching)
         {
@@ -190,27 +228,28 @@ public class PlayerController : MonoBehaviour {
         }
 
         //gliding
-        if (!grounded && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && canUpdraft && updraftActive && canGlide) {
+        if (!CheckGrounded(5f) && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && canUpdraft && updraftActive && canGlide) {
             updraftActive = false;
             Updraft();
         }
 
-        if (!grounded && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton3)) && canGlide) {
+        if (!CheckGrounded(5f) && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton3)) && canGlide && !gliding) {
             Glide();
         }
 
-        else if ((updraftTimer < 0 && Input.GetKeyUp(KeyCode.S)) || grounded){
+        else if ((updraftTimer < 0 && Input.GetKeyUp(KeyCode.S)) || CheckGrounded(5f) && gliding){
 			EndGlide();
 		}
 
 		//DiveBomb
 
-		if(canDiveBomb && (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2) && !grounded)){
+		if(canDiveBomb && (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2)) && !grounded){
 			DiveBomb();
 		}
         
 		//squeak
 		if(canSqueak && (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.JoystickButton7))){
+            aso.clip = squeakClip;
             aso.Play();
             foreach (GameObject box in boxes){
                 string code = box.GetComponent<Interactable>().Interact(null);
@@ -221,19 +260,19 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 
-		//Interact
+		//Interact -- but not any more cause it's super redundant
 		if(Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.JoystickButton4)){
 			Interact();
 		}
 
 		//nibble
-		if(Input.GetKeyDown(KeyCode.Z)|| Input.GetKeyDown(KeyCode.JoystickButton5)){
+		if(Input.GetKeyDown(KeyCode.Z)|| Input.GetKeyDown(KeyCode.JoystickButton5) && grounded){
 			Nibble();
 		}
 
 		//dig
-		if(usbState == (States)2 && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7))){
-			Dig();
+		if(usbState == (States)2 && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7)) && grounded){
+            Dig();
 		}
 
 		//radar
@@ -242,6 +281,11 @@ public class PlayerController : MonoBehaviour {
 		}
 
         //magnet
+        if(usbState == (States)1 && Input.GetKeyDown(KeyCode.X))
+        {
+            maso.clip = magnetClip;
+            maso.Play();
+        }
         if (usbState == (States)1 && Input.GetKey(KeyCode.X))
         {
             foreach (Rigidbody magnetic in magnetics)
@@ -267,6 +311,7 @@ public class PlayerController : MonoBehaviour {
         }
         else if(!Input.GetKey(KeyCode.X))
         {
+            maso.Stop();
             foreach (Rigidbody magnetic in magnetics)
             {
                 magnetic.isKinematic = false;
@@ -276,7 +321,10 @@ public class PlayerController : MonoBehaviour {
     }
 
 	private void Dig(){
-		RaycastHit hit;
+        aso.clip = digClip;
+        aso.Play();
+
+        RaycastHit hit;
 
 		if (Physics.SphereCast(transform.position, 2f, transform.forward, out hit, 2f)){
 			if(hit.transform.tag == "diggable"){
@@ -286,8 +334,10 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void Nibble(){
-		
-		RaycastHit hit;
+        aso.clip = nibbleClip;
+        aso.Play();
+
+        RaycastHit hit;
 
 		if (Physics.SphereCast(transform.position, 4f, transform.forward, out hit, 4f)){
 			if(hit.transform.tag == "bitable"){
@@ -318,6 +368,8 @@ public class PlayerController : MonoBehaviour {
 		 }
          
 		 if(grounded){
+            aso.clip = jumpClip;
+            aso.Play();
 			ac.SetTrigger("jump");
 		 	rb.AddForce(Vector3.up * height, ForceMode.Impulse);
 		 }
@@ -325,39 +377,37 @@ public class PlayerController : MonoBehaviour {
 
 	private void Glide(){
         gliding = true;
+        gaso.clip = glideClip;
+        gaso.Play();
 		ac.SetBool("glide",true);
-		walkSpeed = runSpeed;
+		walkSpeed = glideSpeed;
 		f.force = Vector3.up * 4.9f;
 	}
 
 	private void EndGlide(){
         gliding = false;
+        gaso.Stop();
 		ac.SetBool("glide",false);
-		walkSpeed = 4;
+		walkSpeed = defaultWalkSpeed;
         f.force = new Vector3(0, 0, 0);
     }
 
 	private void Updraft(){
 		ac.SetBool("glide",true);
+        aso.clip = updraftClip;
+        aso.Play();
 		walkSpeed = runSpeed;
         rb.AddForce(Vector3.up * 10f, ForceMode.Impulse);
     }
 
 	private void DiveBomb(){
-		f.force = -Vector3.up * 50f;
+        aso.clip = diveBombClip;
+        aso.Play();
+        f.force = -Vector3.up * 50f;
 	}
 
-	private bool CheckGrounded(){
+	private bool CheckGrounded(float err){
 		float DistanceToTheGround = boxCollider.bounds.extents.y;
-        float err;
-        if (gliding)
-        {
-            err = 5f;
-        }
-        else
-        {
-            err = 0f;
-        }
         Color rayColor;
 		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + err);
         if (IsGrounded)
@@ -368,7 +418,7 @@ public class PlayerController : MonoBehaviour {
         {
             rayColor = Color.red;
         }
-        Debug.DrawRay(transform.position, Vector3.down.normalized * (DistanceToTheGround + err), rayColor, Time.deltaTime);
+        //Debug.DrawRay(transform.position, Vector3.down.normalized * (DistanceToTheGround + err), rayColor, Time.deltaTime);
         return IsGrounded;
 	}
 

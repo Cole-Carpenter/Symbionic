@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Tubes : Interactable {
 
+
+    private Transform playerT;
+    private Rigidbody playerRB;
     public List<Transform> Nodes;
-    public Transform playerT;
     public Transform camPoint;
     public GameObject camRig;
     public Spline spline;
@@ -20,9 +22,9 @@ public class Tubes : Interactable {
     private bool awake = false;
     private float realSpeed;
     private int nPoints;
-    private float t = 0;
     private float distance = 0;
     private bool activated = false;
+    private bool firstPoint;
 
 
     // Use this for initialization
@@ -31,7 +33,6 @@ public class Tubes : Interactable {
         camScript = camRig.GetComponent<UnityStandardAssets.Cameras.FreeLookCam>();
         camScript2 = camRig.GetComponent<UnityStandardAssets.Cameras.ProtectCameraFromWallClip>();
         cam = Camera.main;
-        playerScript = playerT.GetComponent<PlayerController>();
         realSpeed = speed / 10;
     }
 
@@ -51,23 +52,32 @@ public class Tubes : Interactable {
             camScript.enabled = false;
             camScript2.enabled = false;
             playerScript.enabled = false;
+            playerRB.isKinematic = true;
+            playerRB.constraints = RigidbodyConstraints.None;
             awake = true;
         }
-        if (activated)
+        if(activated && !firstPoint)
+        {
+            playerRB.MovePosition(Vector3.Lerp(playerRB.position, spline.controlPoints[1].position , 3f * Time.deltaTime));
+            if ((playerRB.position - spline.controlPoints[1].position).magnitude < 0.8f)
+            {
+                firstPoint = true;
+            }
+        }
+        else if (activated && firstPoint)
         {
             cam.transform.position = Vector3.Lerp(cam.transform.position, camPoint.position, 2f * Time.deltaTime);
-            Vector3 relativePos = playerT.position - cam.transform.position;
-            cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, Quaternion.LookRotation(relativePos, Vector3.up), 3f * Time.deltaTime);
-            Vector3 newPos = spline.SplineMove(t, playerT);
+            Vector3 relativePos = playerRB.position - cam.transform.position;
+            //cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, Quaternion.LookRotation(relativePos, Vector3.up), 2f * Time.deltaTime);
+            Vector3 newPos = spline.SplineMove(realSpeed, playerT);
             if(newPos == playerT.position)
             {
                 activated = false;
             }
             else
             {
-                playerT.position = newPos;
-                playerT.LookAt(spline.GetNextPoint());
-                t += realSpeed;
+                playerT.LookAt(spline.GetNextPoint(), playerT.up);
+                playerRB.MovePosition(newPos);
             }
         }
         if (!activated && awake)
@@ -78,6 +88,10 @@ public class Tubes : Interactable {
             camScript2.enabled = true;
             camScript.SetTarget(playerT);
             playerScript.enabled = true;
+            playerRB.isKinematic = false;
+            playerRB.constraints = RigidbodyConstraints.FreezeRotation;
+            firstPoint = false;
+            spline.ResetSpline();
             awake = false;
         }
 
@@ -87,6 +101,8 @@ public class Tubes : Interactable {
     {
         activated = true;
         playerT = player;
+        playerScript = playerT.GetComponent<PlayerController>();
+        playerRB = player.GetComponent<Rigidbody>();
         return"";
     }
 }

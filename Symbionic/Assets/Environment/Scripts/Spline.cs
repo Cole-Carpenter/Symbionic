@@ -9,6 +9,7 @@ public class Spline : MonoBehaviour {
     private Color[] colorsArray = { Color.white, Color.red, Color.blue, Color.magenta, Color.black };
     private float totalLength;
     private int pos = 1;
+    private float currT = 0f;
     private float offset = 0;
 
     /* void OnDrawGizmos()
@@ -228,17 +229,24 @@ public class Spline : MonoBehaviour {
         return controlPoints[pos + 1].position;
     }
 
+    public void ResetSpline()
+    {
+        pos = 1;
+    }
+
     public Vector3 SplineMove(float t, Transform moving_body)
     {
+        print(currT);
+        currT += t;
         if ((moving_body.position - controlPoints[pos + 1].position).magnitude < 0.8f)
         {
             pos++;
-            offset = t;
+            offset = currT;
         }
         if (pos == controlPoints.Length - 2)
         {
             return moving_body.position;
         }
-        return ConstantSpline(t - offset);
+        return ConstantSpline(currT - offset);
     }
 }
