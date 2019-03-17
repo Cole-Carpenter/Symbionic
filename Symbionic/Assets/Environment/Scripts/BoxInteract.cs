@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoxInteract : MonoBehaviour {
+public class BoxInteract : Interactable {
 
 	public string code;
 	private Animator aic;
@@ -17,7 +17,7 @@ public class BoxInteract : MonoBehaviour {
 		
 	}
 
-	public string Interact(Transform player)
+	public override string Interact(Transform player)
     {
 		aic.SetTrigger("open");
 		return code;

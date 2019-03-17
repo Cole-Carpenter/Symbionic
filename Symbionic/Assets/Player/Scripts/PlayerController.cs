@@ -213,7 +213,11 @@ public class PlayerController : MonoBehaviour {
 		if(canSqueak && (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.JoystickButton7))){
             aso.Play();
             foreach (GameObject box in boxes){
-				uic.SendCode(box.GetComponent<BoxInteract>().Interact(null));
+                string code = box.GetComponent<Interactable>().Interact(null);
+                if (code != "")
+                {
+                    uic.SendCode(code);
+                }
 			}
 		}
 
@@ -250,6 +254,10 @@ public class PlayerController : MonoBehaviour {
                 {
                     magnetic.gameObject.transform.parent = transform;
                     magnetic.isKinematic = true;
+                    if (magnetic.transform.localPosition.y < magnetic.gameObject.GetComponent<Collider>().bounds.extents.y)
+                    {
+                        magnetic.transform.localPosition = new Vector3(magnetic.transform.localPosition.x,magnetic.gameObject.GetComponent<Collider>().bounds.extents.y, magnetic.transform.localPosition.z);
+                    }
                 }
                 else if (magnetic.gameObject.transform.parent != transform && !magnetMask.bounds.Contains(magnetic.position))
                 {
