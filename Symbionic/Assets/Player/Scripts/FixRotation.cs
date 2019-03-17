@@ -20,11 +20,10 @@ public class FixRotation : MonoBehaviour {
 		if (Physics.Raycast(transform.position, -Vector3.up, out hit,  distToGround + 3f)){
 			normal = hit.normal;
 		}
-        Debug.DrawRay(transform.position, -Vector3.up * (distToGround + 10f), Color.black, Time.deltaTime);
+        //Debug.DrawRay(transform.position, -Vector3.up * (distToGround + 10f), Color.black, Time.deltaTime);
         sketch = Quaternion.FromToRotation(transform.up, normal);
         sketch = sketch * rb.rotation;
 
-        //transform.rotation = Quaternion.Lerp(transform.rotation, sketch, Time.deltaTime * 3f);
         rb.MoveRotation(Quaternion.Lerp(rb.rotation, sketch, Time.deltaTime * 3f));  
     }
 
