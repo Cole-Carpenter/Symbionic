@@ -293,26 +293,18 @@ public class PlayerController : MonoBehaviour {
         {
             foreach (Rigidbody magnetic in magnetics)
             {
-                if(magnetic.gameObject.transform.parent == transform)
+                if (magnetMask.bounds.Contains(magnetic.position))
                 {
-                    magnetic.transform.rotation = magnetic.transform.rotation * Quaternion.Euler(new Vector3(50f, 50f, 50f) * Time.deltaTime);
-                }
-                else if (magnetic.gameObject.transform.parent != transform && magnetMask.bounds.Contains(magnetic.position))
-                {
-                    magnetic.gameObject.transform.parent = transform;
-                    magnetic.isKinematic = true;
-                    if (magnetic.transform.localPosition.y < magnetic.gameObject.GetComponent<Collider>().bounds.extents.y)
-                    {
-                        magnetic.transform.localPosition = new Vector3(magnetic.transform.localPosition.x,magnetic.gameObject.GetComponent<Collider>().bounds.extents.y, magnetic.transform.localPosition.z);
-                    }
+                    magnetic.drag = 4f;
                 }
                 else if (magnetic.gameObject.transform.parent != transform && !magnetMask.bounds.Contains(magnetic.position))
                 {
+					magnetic.drag = 1f;
                     magnetic.MovePosition(Vector3.MoveTowards(magnetic.position, rb.position, .25f));
                 }
             }
         }
-        else if(!Input.GetKey(KeyCode.X))
+        if(Input.GetKeyUp(KeyCode.X))
         {
             maso.Stop();
             mMMeshRenderer.enabled = false;
@@ -385,7 +377,7 @@ public class PlayerController : MonoBehaviour {
         gaso.Play();
 		ac.SetBool("glide",true);
 		walkSpeed = glideSpeed;
-		f.force = Vector3.up * 4.9f;
+		f.force = Vector3.up * 20f;
 	}
 
 	private void EndGlide(){
@@ -414,7 +406,9 @@ public class PlayerController : MonoBehaviour {
 		float DistanceToTheGround = boxCollider.bounds.extents.y;
         Color rayColor;
 		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + err);
-        if (IsGrounded)
+
+        /*
+		if (IsGrounded)
         {
             rayColor = Color.black;
         }
@@ -423,6 +417,8 @@ public class PlayerController : MonoBehaviour {
             rayColor = Color.red;
         }
         //Debug.DrawRay(transform.position, Vector3.down.normalized * (DistanceToTheGround + err), rayColor, Time.deltaTime);
+		*/
+
         return IsGrounded;
 	}
 
