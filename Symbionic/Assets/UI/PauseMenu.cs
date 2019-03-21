@@ -34,6 +34,8 @@ public class PauseMenu : MonoBehaviour {
         //quitButton = pauseMenuUI.transform.GetChild(2).GetComponent<Button>();
         playerController = GetComponent<PlayerController>();
         codes = new List<string>();
+        
+
     }
 	
 	// Update is called once per frame
