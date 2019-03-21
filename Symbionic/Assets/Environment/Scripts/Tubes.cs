@@ -71,7 +71,7 @@ public class Tubes : Interactable {
             Vector3 relativePos = playerT.position - cam.transform.position;
             cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, Quaternion.LookRotation(relativePos, Vector3.up), 2f * Time.deltaTime);
             Vector3 newPos = spline.SplineMove(realSpeed, playerT);
-            if(newPos == playerT.position)
+            if(newPos == Vector3.zero)
             {
                 playerT.position = warpPoint.position;
                 activated = false;

@@ -20,7 +20,7 @@ public class SoundStoneInteract : Interactable {
 
     public override string Interact(Transform Player)
     {
-        auds.Play(100000);
+        auds.PlayDelayed(2f);
         ac.SetTrigger("Activate");
         return "";
     }
