@@ -8,13 +8,22 @@ public class PauseMenu : MonoBehaviour {
 
     public enum PauseStates {Codes, Quit};
 
+    
+    public GameObject pauseMenuUI;
+    public GameObject settingsOb;
+    public GameObject codeList;
+    public Button codeButton;
+    public Button settingsButton;
+    public Button quitButton;
+
+    private GameObject currSubMenu;
+    private PlayerController playerController;
+
     private PauseStates pauseSelect = 0;
     private bool paused = false;
-    public GameObject pauseMenuUI;
-    private PlayerController playerController;
-    public Button codeButton;
-    public Button quitButton;
-    public Image codeList;
+    private bool subMenu = false;
+
+
 
     // Use this for initialization
     void Start () {
@@ -25,8 +34,15 @@ public class PauseMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //get out of submenu
+        if(Input.GetButtonDown("Pause") && subMenu){
+            currSubMenu.SetActive(false);
+            FlipButtons();
+            subMenu = false;
+            codeButton.Select();
+        }
         //pause
-        if (Input.GetButtonDown("Pause"))
+        else if (Input.GetButtonDown("Pause"))
         {
             if (paused)
             {
@@ -54,11 +70,28 @@ public class PauseMenu : MonoBehaviour {
         }
     }
 
+    private void FlipButtons()
+    {
+        codeButton.gameObject.SetActive(!codeButton.gameObject.activeSelf);
+        settingsButton.gameObject.SetActive(!settingsButton.gameObject.activeSelf);
+        quitButton.gameObject.SetActive(!quitButton.gameObject.activeSelf);
+    }
+
     public void Codes()
     {
-        codeButton.gameObject.SetActive(false);
-        quitButton.gameObject.SetActive(false);
-        codeList.enabled = true;
+        FlipButtons();
+        codeList.SetActive(true);
+        currSubMenu = codeList;
+        subMenu = true;
+    }
+
+    public void Settings()
+    {
+        FlipButtons();
+        settingsOb.SetActive(true);
+        settingsOb.GetComponentInChildren<Slider>().Select();
+        currSubMenu = settingsOb;
+        subMenu = true;
     }
 
     public void Quit()

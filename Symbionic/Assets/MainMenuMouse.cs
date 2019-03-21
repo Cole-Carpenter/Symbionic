@@ -5,6 +5,7 @@ using UnityEngine;
 public class MainMenuMouse : MonoBehaviour {
     private Animator ac;
     public Transform[] target;
+    private Rigidbody rb;
 
     private bool moving = true;
     public float walkSpeed;
@@ -14,7 +15,8 @@ public class MainMenuMouse : MonoBehaviour {
     private int index;
     // Use this for initialization
     void Start () {
-        ac = GetComponent<Animator>();
+        ac = GetComponentInChildren<Animator>();
+        rb = GetComponent<Rigidbody>();
         index = 0;
     }
 	
@@ -27,11 +29,11 @@ public class MainMenuMouse : MonoBehaviour {
             float step = walkSpeed * Time.deltaTime;
 
             // Move our position a step closer to the target.
-            transform.position = Vector3.MoveTowards(transform.position, target[index].position, step);
+            rb.MovePosition(Vector3.MoveTowards(transform.position, target[index].position, step));
             Vector3 _dir = (transform.position - target[index].position).normalized;
 
             Quaternion _look = Quaternion.LookRotation(-_dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, _look, Time.deltaTime * rotSpeed);
+            rb.rotation = Quaternion.Slerp(transform.rotation, _look, Time.deltaTime * rotSpeed);
         }
     }
     private void OnTriggerEnter(Collider other)

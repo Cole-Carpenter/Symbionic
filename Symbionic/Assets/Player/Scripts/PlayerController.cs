@@ -124,12 +124,12 @@ public class PlayerController : MonoBehaviour {
         //Running
         if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.JoystickButton0))
         {
-            leftStart = 30f * Time.deltaTime;
+            leftStart = 15f * Time.deltaTime;
         }
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.JoystickButton1))
         {
-            rightStart = 30f * Time.deltaTime;
+            rightStart = 15f * Time.deltaTime;
         }
 
         if (runActive && rightStart > 0 && leftStart > 0)
@@ -144,7 +144,7 @@ public class PlayerController : MonoBehaviour {
             runActive = true;
             leftStart = 0;
             rightStart = 0;
-            runStart = .7f;
+            runStart = .3f;
         }
 
         else if (runStart <= 0)
@@ -157,6 +157,7 @@ public class PlayerController : MonoBehaviour {
 
         if (running)
         {
+            rb.drag = 1;
             if(rb.velocity.sqrMagnitude < sqrMaxVelocity)
             {
                 rb.AddForce(transform.forward * runSpeed * Time.deltaTime, ForceMode.Acceleration);
@@ -166,6 +167,7 @@ public class PlayerController : MonoBehaviour {
         //walking and turning
         else if (!running && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton0)) && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
+            rb.drag = 4f;
             ac.SetBool("walking", true);
             track.material.SetFloat("_Speed2", 6f);
             rb.AddForce(transform.forward * walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
@@ -173,6 +175,7 @@ public class PlayerController : MonoBehaviour {
 
         else if (!running && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton0)))
         {
+            rb.drag = 4f;
             ac.SetBool("walking", true);
             track.material.SetFloat("_Speed2", 6f);
             rb.AddForce(0.5f * transform.forward * walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
@@ -181,6 +184,7 @@ public class PlayerController : MonoBehaviour {
 
         else if (!running && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
+            rb.drag = 4f;
             ac.SetBool("walking", true);
             track.material.SetFloat("_Speed2", 6f);
             rb.AddForce(0.5f * transform.forward * walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
@@ -192,10 +196,6 @@ public class PlayerController : MonoBehaviour {
             if(rb.velocity != new Vector3(0, 0, 0) && grounded)
             {
                 rb.drag = 4f;
-            }
-            else
-            {
-                rb.drag = 1f;
             }
         }
 
@@ -255,9 +255,10 @@ public class PlayerController : MonoBehaviour {
             aso.Play();
             foreach (GameObject box in boxes){
                 string code = box.GetComponent<Interactable>().Interact(null);
+                string[] pToScreen = code.Split('-');
                 if (code != "")
                 {
-                    uic.SendCode(code);
+                    uic.SendCode(pToScreen[0],pToScreen[1]);
                 }
 			}
 		}
@@ -324,7 +325,9 @@ public class PlayerController : MonoBehaviour {
 
 		if (Physics.SphereCast(transform.position, 2f, transform.forward, out hit, 2f)){
 			if(hit.transform.tag == "diggable"){
-				uic.SendCode(hit.transform.gameObject.GetComponent<Interactable>().Interact(transform));
+                string code = hit.transform.gameObject.GetComponent<Interactable>().Interact(transform);
+                string[] pToScreen = code.Split('-');
+                uic.SendCode(pToScreen[0],pToScreen[1]);
 			}
 		}
 	}
