@@ -16,6 +16,7 @@ public class PauseMenu : MonoBehaviour {
     public Button settingsButton;
     public Button quitButton;
 
+    private List<string> codes;
     private GameObject currSubMenu;
     private PlayerController playerController;
 
@@ -30,6 +31,7 @@ public class PauseMenu : MonoBehaviour {
         //codeButton = pauseMenuUI.transform.GetChild(1).GetComponent<Button>();
         //quitButton = pauseMenuUI.transform.GetChild(2).GetComponent<Button>();
         playerController = GetComponent<PlayerController>();
+        codes = new List<string>();
     }
 	
 	// Update is called once per frame
@@ -81,6 +83,13 @@ public class PauseMenu : MonoBehaviour {
     {
         FlipButtons();
         codeList.SetActive(true);
+        Text t = codeList.GetComponentInChildren<Text>();
+        t.text = "";
+        for(int i = 0; i < codes.Count; i += 2)
+        {
+            string newl = i > 0 ? "\n" : ""; 
+            t.text += newl + codes[i] + ": " + codes[i + 1];
+        }
         currSubMenu = codeList;
         subMenu = true;
     }
@@ -97,5 +106,18 @@ public class PauseMenu : MonoBehaviour {
     public void Quit()
     {
         Application.Quit();
+    }
+
+    public void AddCode(string code, string description)
+    {
+        foreach(string phrase in codes)
+        {
+            if (code == phrase.Trim(' '))
+            {
+                return;
+            }
+        }
+        codes.Add(code);
+        codes.Add(description);
     }
 }

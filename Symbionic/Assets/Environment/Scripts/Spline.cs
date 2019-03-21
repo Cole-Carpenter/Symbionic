@@ -245,7 +245,7 @@ public class Spline : MonoBehaviour {
         }
         if (pos == controlPoints.Length - 2)
         {
-            return moving_body.position;
+            return Vector3.zero;
         }
         return ConstantSpline(currT - offset);
     }

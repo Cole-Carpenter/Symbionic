@@ -7,12 +7,13 @@ public class UIController : MonoBehaviour {
 	
 	public Text codeboard;
     public Text descboard;
+    private PauseMenu p;
 
     private float fadeout = 0;
 
 	// Use this for initialization
 	void Start () {
-		
+        p = GetComponent<PauseMenu>();
 	}
 	
 	// Update is called once per frame
@@ -38,5 +39,6 @@ public class UIController : MonoBehaviour {
         fadeout = 20f;
         codeboard.color = Color.white;
         descboard.color = Color.white;
+        p.AddCode(code,description);
 	}
 }
