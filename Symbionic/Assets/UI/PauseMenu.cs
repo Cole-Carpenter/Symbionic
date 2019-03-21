@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class PauseMenu : MonoBehaviour {
 
     public enum PauseStates {Codes, Quit};
 
-    
     public GameObject pauseMenuUI;
     public GameObject settingsOb;
     public GameObject codeList;
     public Button codeButton;
     public Button settingsButton;
     public Button quitButton;
+    public Slider fx;
+    public Slider music;
+    public AudioMixer am;
 
     private List<string> codes;
     private GameObject currSubMenu;
     private PlayerController playerController;
 
-    private PauseStates pauseSelect = 0;
     private bool paused = false;
     private bool subMenu = false;
 
@@ -56,10 +58,6 @@ public class PauseMenu : MonoBehaviour {
         //pause
         else if (Input.GetButtonDown("Pause"))
         {
-            if (paused)
-            {
-                pauseSelect = 0;
-            }
             Pause(paused);
         }
     }
@@ -129,5 +127,15 @@ public class PauseMenu : MonoBehaviour {
         }
         codes.Add(code);
         codes.Add(description);
+    }
+
+    public void FxChange()
+    {
+        am.SetFloat("FX", Mathf.Log(fx.value) * 20);
+    }
+
+    public void MusicChange()
+    {
+        am.SetFloat("Music", Mathf.Log(music.value) * 20);
     }
 }
