@@ -86,6 +86,7 @@ public class MyMessageListener : MonoBehaviour {
             }
         }*/
         Camera = GameObject.Find("FreeLookCameraRig");
+        CodeT = GameObject.Find("Code_Input").GetComponent<Text>();
         audioS = Camera.GetComponents<AudioSource>();
         PlayOriginalTrack();
         _controller = GetComponent<PlayerController>();
@@ -317,7 +318,7 @@ public class MyMessageListener : MonoBehaviour {
         IsPlayingClip = true;
         audioS[a2].clip = Audio[clip];
 
-        StartCoroutine(FadeOut(speed, a1));
+        StartCoroutine(FadeOut(speed , a1));
         StartCoroutine(FadeIn(speed, a2));
     }
 

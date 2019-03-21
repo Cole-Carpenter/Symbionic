@@ -14,6 +14,8 @@ public class UIController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         p = GetComponent<PauseMenu>();
+        codeboard = GameObject.Find("Code").GetComponent<Text>();
+        descboard = GameObject.Find("Description").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame

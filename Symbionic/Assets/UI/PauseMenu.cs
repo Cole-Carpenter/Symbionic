@@ -32,6 +32,16 @@ public class PauseMenu : MonoBehaviour {
         //quitButton = pauseMenuUI.transform.GetChild(2).GetComponent<Button>();
         playerController = GetComponent<PlayerController>();
         codes = new List<string>();
+
+        pauseMenuUI = GameObject.Find("PauseMenu");
+        settingsOb = GameObject.Find("SettingsList");
+        codeList = GameObject.Find("CodeList");
+
+        codeButton = GameObject.Find("Codes").GetComponent<Button>();
+        settingsButton = GameObject.Find("Settings").GetComponent<Button>();
+        quitButton = GameObject.Find("Quit").GetComponent<Button>();
+        
+
     }
 	
 	// Update is called once per frame
