@@ -7277,6 +7277,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1231627512}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -7292,14 +7300,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalPosition.z
       value: -91.80408
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (12)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
@@ -7472,6 +7472,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1231627512}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -7491,14 +7499,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_RootOrder
       value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (16)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
@@ -7671,6 +7671,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1639098643}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (14)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -7691,14 +7699,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (14)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
 --- !u!1001 &363531850
@@ -7708,6 +7708,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1639098643}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (15)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -7727,14 +7735,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_RootOrder
       value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (15)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
@@ -9769,6 +9769,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1231627512}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (17)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -9788,14 +9796,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_RootOrder
       value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (17)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
@@ -17774,6 +17774,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1231627512}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (15)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -17793,14 +17801,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_RootOrder
       value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (15)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
@@ -18949,6 +18949,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1639098643}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -18969,14 +18977,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (13)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
 --- !u!1001 &959419548
@@ -18990,6 +18990,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_GDC_Real 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
+        type: 3}
+      propertyPath: codeButton
+      value: 
+      objectReference: {fileID: 1994889732}
+    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
+        type: 3}
+      propertyPath: quitButton
+      value: 
+      objectReference: {fileID: 1903751627}
+    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
+        type: 3}
+      propertyPath: pauseMenuUI
+      value: 
+      objectReference: {fileID: 979664332}
+    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
+        type: 3}
+      propertyPath: codeList
+      value: 
+      objectReference: {fileID: 502654181}
+    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
+        type: 3}
+      propertyPath: settingsOb
+      value: 
+      objectReference: {fileID: 667466344}
+    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
+        type: 3}
+      propertyPath: settingsButton
+      value: 
+      objectReference: {fileID: 1578176071}
     - target: {fileID: 4964712952089318, guid: 85282b8325ed3314ea354f5db7a762ce, type: 3}
       propertyPath: m_LocalPosition.x
       value: -253.6
@@ -19034,40 +19064,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
-        type: 3}
-      propertyPath: codeButton
-      value: 
-      objectReference: {fileID: 1994889732}
-    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
-        type: 3}
-      propertyPath: quitButton
-      value: 
-      objectReference: {fileID: 1903751627}
-    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
-        type: 3}
-      propertyPath: pauseMenuUI
-      value: 
-      objectReference: {fileID: 979664332}
-    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
-        type: 3}
-      propertyPath: codeList
-      value: 
-      objectReference: {fileID: 502654181}
-    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
-        type: 3}
-      propertyPath: settingsOb
-      value: 
-      objectReference: {fileID: 667466344}
-    - target: {fileID: 114776273015319380, guid: 85282b8325ed3314ea354f5db7a762ce,
-        type: 3}
-      propertyPath: settingsButton
-      value: 
-      objectReference: {fileID: 1578176071}
     - target: {fileID: 114482509703725908, guid: 85282b8325ed3314ea354f5db7a762ce,
         type: 3}
       propertyPath: jumpSpeed
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 1754159104906794, guid: 85282b8325ed3314ea354f5db7a762ce, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114365527872087700, guid: 85282b8325ed3314ea354f5db7a762ce,
         type: 3}
@@ -19079,10 +19083,10 @@ PrefabInstance:
       propertyPath: descboard
       value: 
       objectReference: {fileID: 1939535213}
-    - target: {fileID: 1754159104906794, guid: 85282b8325ed3314ea354f5db7a762ce, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 102967489, guid: 85282b8325ed3314ea354f5db7a762ce, type: 3}
+      propertyPath: CodeT
+      value: 
+      objectReference: {fileID: 1784226277}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85282b8325ed3314ea354f5db7a762ce, type: 3}
 --- !u!1 &965364731
@@ -41343,6 +41347,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1231627512}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -41362,14 +41374,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_RootOrder
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (13)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
@@ -53255,6 +53259,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1639098643}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -53274,14 +53286,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_RootOrder
       value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (16)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
@@ -55106,6 +55110,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1639098643}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -55121,14 +55133,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalPosition.z
       value: -91.80408
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (12)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
@@ -55403,6 +55407,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas 1
       objectReference: {fileID: 0}
+    - target: {fileID: 201762898, guid: 60f4aa602f2bffd4ca8749a533f702ef, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 324255355}
+    - target: {fileID: 201762898, guid: 60f4aa602f2bffd4ca8749a533f702ef, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Quit
+      objectReference: {fileID: 0}
     - target: {fileID: 7201128892030071608, guid: 60f4aa602f2bffd4ca8749a533f702ef,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -55508,22 +55520,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 759416939, guid: 60f4aa602f2bffd4ca8749a533f702ef, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 324255355}
-    - target: {fileID: 759416939, guid: 60f4aa602f2bffd4ca8749a533f702ef, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Settings
-      objectReference: {fileID: 0}
-    - target: {fileID: 201762898, guid: 60f4aa602f2bffd4ca8749a533f702ef, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 324255355}
-    - target: {fileID: 201762898, guid: 60f4aa602f2bffd4ca8749a533f702ef, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Quit
-      objectReference: {fileID: 0}
     - target: {fileID: 450387765, guid: 60f4aa602f2bffd4ca8749a533f702ef, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -55532,8 +55528,28 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Codes
       objectReference: {fileID: 0}
+    - target: {fileID: 759416939, guid: 60f4aa602f2bffd4ca8749a533f702ef, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 324255355}
+    - target: {fileID: 759416939, guid: 60f4aa602f2bffd4ca8749a533f702ef, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Settings
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60f4aa602f2bffd4ca8749a533f702ef, type: 3}
+--- !u!114 &1784226277 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1515965563, guid: 60f4aa602f2bffd4ca8749a533f702ef,
+    type: 3}
+  m_PrefabInstance: {fileID: 1784226276}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1784425078
 GameObject:
   m_ObjectHideFlags: 0
@@ -60642,6 +60658,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1231627512}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (14)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -60661,14 +60685,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_RootOrder
       value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (14)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
@@ -66731,6 +66747,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1639098643}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_Name
+      value: spring_magnet (17)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
+      propertyPath: m_TagString
+      value: magnetic
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
@@ -66750,14 +66774,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
       propertyPath: m_RootOrder
       value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_Name
-      value: spring_magnet (17)
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
-      propertyPath: m_TagString
-      value: magnetic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d525b6f1de600849ba946280837e66b, type: 3}
