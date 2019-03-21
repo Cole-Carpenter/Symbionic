@@ -11,6 +11,7 @@ public class Tubes : Interactable {
     public Transform camPoint;
     public GameObject camRig;
     public Spline spline;
+    public Transform warpPoint;
 
     public float speed = 1f;
 
@@ -72,6 +73,7 @@ public class Tubes : Interactable {
             Vector3 newPos = spline.SplineMove(realSpeed, playerT);
             if(newPos == playerT.position)
             {
+                playerT.position = warpPoint.position;
                 activated = false;
             }
             else
