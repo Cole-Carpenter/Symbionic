@@ -175,55 +175,64 @@ public class MyMessageListener : MonoBehaviour {
 
     void KeypadControls()
     {
-		
-		//NUMPAD STUFF you have to use Keycode.Keypad# example Keycode.Keypad7 
-		//or you can use Input.GetKeyDown("[7]") specifically for the keypad
-		
+
+        //NUMPAD STUFF you have to use Keycode.Keypad# example Keycode.Keypad7 
+        //or you can use Input.GetKeyDown("[7]") specifically for the keypad
 
 
-		
-		//I HAVE NO IDEA HOW TO MAKE THIS BETTER SO BARE WITH ME
-		if(Input.GetKeyDown(KeyCode.Keypad0) || Input.GetKeyDown(KeyCode.Insert)){
-			CodeT.text += "0";
-            currentTime = Time.time;
-        }
-		if(Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.End)){
-			CodeT.text += "1";
-            currentTime = Time.time;
-        }
-		if(Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.DownArrow)){
-			CodeT.text += "2";
-            currentTime = Time.time;
-        }
-		if(Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.PageDown)){
-			CodeT.text += "3";
-            currentTime = Time.time;
-        }
-		if(Input.GetKeyDown(KeyCode.Keypad4) || Input.GetKeyDown(KeyCode.LeftArrow)){
-			CodeT.text += "4";
-            currentTime = Time.time;
-        }
-		//Keypad 5 is weird, doesn't have an alternative unless it's blank
-		if(Input.GetKeyDown(KeyCode.Keypad5)){
-			CodeT.text += "5";
-            currentTime = Time.time;
-        }
-		if(Input.GetKeyDown(KeyCode.Keypad6) || Input.GetKeyDown(KeyCode.RightArrow)){
-			CodeT.text += "6";
-            currentTime = Time.time;
-        }
-		if(Input.GetKeyDown(KeyCode.Keypad7) || Input.GetKeyDown(KeyCode.Home)){
-			CodeT.text += "7";
-            currentTime = Time.time;
-        }
-		if(Input.GetKeyDown(KeyCode.Keypad8) || Input.GetKeyDown(KeyCode.UpArrow)){
-			CodeT.text += "8";
-            currentTime = Time.time;
-        }
-		if(Input.GetKeyDown(KeyCode.Keypad9) || Input.GetKeyDown(KeyCode.PageUp)){
-			CodeT.text += "9";
-            currentTime = Time.time;
-        }
+
+            //I HAVE NO IDEA HOW TO MAKE THIS BETTER SO BARE WITH ME
+            if (Input.GetKeyDown(KeyCode.Keypad0) || Input.GetKeyDown(KeyCode.Insert))
+            {
+                CodeT.text += "0";
+                currentTime = Time.time;
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.End))
+            {
+                CodeT.text += "1";
+                currentTime = Time.time;
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                CodeT.text += "2";
+                currentTime = Time.time;
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.PageDown))
+            {
+                CodeT.text += "3";
+                currentTime = Time.time;
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad4) || Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                CodeT.text += "4";
+                currentTime = Time.time;
+            }
+            //Keypad 5 is weird, doesn't have an alternative unless it's blank
+            if (Input.GetKeyDown(KeyCode.Keypad5))
+            {
+                CodeT.text += "5";
+                currentTime = Time.time;
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad6) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                CodeT.text += "6";
+                currentTime = Time.time;
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad7) || Input.GetKeyDown(KeyCode.Home))
+            {
+                CodeT.text += "7";
+                currentTime = Time.time;
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad8) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                CodeT.text += "8";
+                currentTime = Time.time;
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad9) || Input.GetKeyDown(KeyCode.PageUp))
+            {
+                CodeT.text += "9";
+                currentTime = Time.time;
+            }
         if (!IsPlayingClip)
         {
             if (CodeT.text == "5889")
@@ -297,8 +306,7 @@ public class MyMessageListener : MonoBehaviour {
             _controller.canDiveBomb = true;
         }
 		if(CodeT.text.Length >= 4){
-			
-			CodeT.text = "";
+                CodeT.text = "";
 		}
         if(Time.time - currentTime > 2.0f)
         {
