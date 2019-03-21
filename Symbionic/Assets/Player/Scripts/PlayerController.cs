@@ -4,71 +4,91 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-	//speeds
-    public float rotateSpeed = 1f;
+    //speeds
+    public float rotateSpeed = 4f;
     public float walkSpeed = 1f;
+    private float defaultWalkSpeed;
     public float runSpeed = 1f;
-	public float jumpSpeed = 1f;
+    public float sqrMaxVelocity = 1f;
+    public float jumpSpeed = 1f;
+    private float glideSpeed;
 
-	//components
-	private Rigidbody rb;
-	private Animator ac;
-	private Animator sac;
-	private Animator bac;
-	private ConstantForce f;
-	public GameObject spring;
-	public GameObject radar;
-	public GameObject blades;
-	public Collider boxCollider;
-	private UIController uic;
-	
-	//lists of interactables
-	private List<GameObject> boxes;
-	private List<GameObject> magnetics;
+    //components
+    private Rigidbody rb;
+    private Animator ac;
+    private AudioSource aso;
+    private AudioSource gaso;
+    private AudioSource maso;
+    private ConstantForce f;
+    private Collider magnetMask;
+    private MeshRenderer mMMeshRenderer;
+    public GameObject radar;
+    public Renderer track;
+    public Collider boxCollider;
+    private UIController uic;
 
-	//states
+    //audio clips
+    public AudioClip squeakClip;
+    public AudioClip pJumpClip;
+    public AudioClip jumpClip;
+    public AudioClip diveBombClip;
+    public AudioClip glideClip;
+    public AudioClip nibbleClip;
+    public AudioClip updraftClip;
+    public AudioClip magnetClip;
+    public AudioClip digClip;
+
+    //lists of interactables
+    private List<GameObject> boxes;
+    private List<Rigidbody> magnetics;
+
+    //states
+    private bool gliding;
     private bool runActive = false;
     private bool running = false;
-	private bool crouching = false;
-	private bool grounded = true;
-	private bool updraftActive = false;
+    private bool crouching = false;
+    private bool grounded = true;
+    private bool updraftActive = false;
+    private bool pJumpStartSoundActive = false;
 
-	//abilities Unlockable
-	public bool canGlide = false;
-	public bool canDiveBomb = false;
-	public bool canUpdraft = false;
+    //abilities Unlockable
+    public bool canGlide = false;
+    public bool canDiveBomb = false;
+    public bool canUpdraft = false;
 
-	//abilities USB
-		//Organic
-	public bool canSqueak = true;
-	public bool canDig = false;
-	public bool canBlood = false; // Not added yet
-		//Mechanical
-	public bool canRadar = true;
-	public bool canMagnet = false;
-	public bool canOil = false; //Not added yet
+    //abilities USB
+    //Organic
+    public bool canSqueak = true;
+    public States usbState = (States)0;
 
-	//timers
+    //timers
     private float runStart = 0f;
     private float leftStart = 0f;
     private float rightStart = 0f;
-	private float pJumpStart = 0f;
-	private float updraftTimer = 0f;
+    private float pJumpStart = 0f;
+    private float updraftTimer = 0f;
 
-	private MyMessageListener SerialControllerM;
-	// Use this for initialization
-	void Start () {
-		SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
-		rb = GetComponent<Rigidbody>();
-		ac = GetComponent<Animator>();
-		sac = spring.GetComponent<Animator>();
-		bac = blades.GetComponent<Animator>();
-		uic = GetComponent<UIController>();
-		f = GetComponent<ConstantForce>();
-		boxes = new List<GameObject>();
-		magnetics = new List<GameObject>();
-	}
-	/*
+    private MyMessageListener SerialControllerM;
+    // Use this for initialization
+    void Start() {
+        //SerialControllerM = GameObject.Find("SerialController").GetComponent<MyMessageListener>();
+        rb = GetComponent<Rigidbody>();
+        ac = GetComponentInChildren<Animator>();
+        aso = GetComponent<AudioSource>();
+        gaso = transform.Find("SymbionicIdle").GetComponent<AudioSource>();
+        maso = transform.Find("MagnetMask").GetComponent<AudioSource>();
+        uic = GetComponent<UIController>();
+        f = GetComponent<ConstantForce>();
+        boxes = new List<GameObject>();
+        magnetMask = transform.Find("MagnetMask").GetComponent<SphereCollider>();
+        mMMeshRenderer = magnetMask.GetComponent<MeshRenderer>();
+        magnetics = new List<Rigidbody>();
+        walkSpeed *= 10f;
+        defaultWalkSpeed = walkSpeed;
+        runSpeed *= 1000f;
+        glideSpeed = walkSpeed * 2f;
+    }
+    /*
 	 0f - left
 	 2 - crouch
 	 4 - Interact
@@ -80,184 +100,247 @@ public class PlayerController : MonoBehaviour {
 	 7 - Squeak / Dig
 
 	*/
-	// Update is called once per frame
-	void Update () {
-		//running timers
+    // Update is called once per frame
+    void Update() {
+        //running timers
         runStart -= Time.deltaTime;
         leftStart -= Time.deltaTime;
         rightStart -= Time.deltaTime;
-		pJumpStart -= Time.deltaTime;
-		updraftTimer -= Time.deltaTime;
+        pJumpStart -= Time.deltaTime;
+        updraftTimer -= Time.deltaTime;
 
-		if(CheckGrounded() == true){
-			grounded = true;
-			updraftActive = true;
-		}
-		else{
-			grounded = false;
-		}
-		
+        if (CheckGrounded(.001f) == true) {
+            grounded = true;
+            ac.SetBool("grounded", true);
+            updraftActive = true;
+        }
+        else {
+            grounded = false;
+            ac.SetBool("grounded", false);
+        }
 
-		
-		//Running
+
+
+        //Running
         if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.JoystickButton0))
         {
-            leftStart = .275f;
+            leftStart = 15f * Time.deltaTime;
         }
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.JoystickButton1))
         {
-            rightStart = .275f;
+            rightStart = 15f * Time.deltaTime;
         }
 
         if (runActive && rightStart > 0 && leftStart > 0)
         {
-			ac.SetBool("running",true);
+            ac.SetBool("running", true);
+            track.material.SetFloat("_Speed2", 12f);
             running = true;
         }
 
         else if (rightStart > 0 && leftStart > 0)
         {
             runActive = true;
-			leftStart = 0;
-			rightStart = 0;
-            runStart = .7f;
+            leftStart = 0;
+            rightStart = 0;
+            runStart = .3f;
         }
 
         else if (runStart <= 0)
         {
             runActive = false;
             running = false;
-			ac.SetBool("running",false);
+            ac.SetBool("running", false);
+            track.material.SetFloat("_Speed2", 0f);
         }
 
         if (running)
         {
-            transform.position += transform.forward * runSpeed * Time.deltaTime;
+            rb.drag = 1;
+            if(rb.velocity.sqrMagnitude < sqrMaxVelocity)
+            {
+                rb.AddForce(transform.forward * runSpeed * Time.deltaTime, ForceMode.Acceleration);
+            }   
         }
 
-		//walking and turning
-        if (!running && (Input.GetKey(KeyCode.Q) ||  Input.GetKey(KeyCode.JoystickButton0)) && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
+        //walking and turning
+        else if (!running && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton0)) && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
-			ac.SetBool("walking", true);
-            transform.position += transform.forward * walkSpeed * Time.deltaTime;
+            rb.drag = 4f;
+            ac.SetBool("walking", true);
+            track.material.SetFloat("_Speed2", 6f);
+            rb.AddForce(transform.forward * walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
         }
 
-        else if (!running && (Input.GetKey(KeyCode.Q) ||  Input.GetKey(KeyCode.JoystickButton0)))
+        else if (!running && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton0)))
         {
-			ac.SetBool("walking", true);
-            transform.Rotate(Vector3.down * rotateSpeed * Time.deltaTime);
+            rb.drag = 4f;
+            ac.SetBool("walking", true);
+            track.material.SetFloat("_Speed2", 6f);
+            rb.AddForce(0.5f * transform.forward * walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
+            rb.MoveRotation(rb.rotation * Quaternion.Euler(Vector3.down * rotateSpeed * Time.deltaTime));
         }
 
         else if (!running && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.JoystickButton1)))
         {
-			ac.SetBool("walking", true);
-            transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
+            rb.drag = 4f;
+            ac.SetBool("walking", true);
+            track.material.SetFloat("_Speed2", 6f);
+            rb.AddForce(0.5f * transform.forward * walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
+            rb.MoveRotation(rb.rotation * Quaternion.Euler(Vector3.up * rotateSpeed * Time.deltaTime));
         }
-		else{
-			ac.SetBool("walking", false);
-		}
+        else {
+            ac.SetBool("walking", false);
+            track.material.SetFloat("_Speed2", 0f);
+            if(rb.velocity != new Vector3(0, 0, 0) && grounded)
+            {
+                rb.drag = 4f;
+            }
+        }
 
-		//crouching and jumping
-		if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton2)){
-			crouching = true;
-			ac.SetBool("crouch",true);
-		}
-		else{
-			crouching = false;
-			ac.SetBool("crouch",false);
-		}
+        //crouching and jumping
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2)) {
+            pJumpStart = 3f;
+            pJumpStartSoundActive = true;
+        }
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.JoystickButton2)) {
+            crouching = true;
+            ac.SetBool("crouch", true);
+        }
+        else {
+            crouching = false;
+            ac.SetBool("crouch", false);
+        }
 
-		if(Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.JoystickButton2)){
-			pJumpStart = .1f;
-		}
+        if(pJumpStart < 0f && pJumpStartSoundActive && crouching)
+        {
+            pJumpStartSoundActive = false;
+            aso.clip = pJumpClip;
+            aso.Play();
+        }
+        if ((pJumpStart < 0 && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3))) && crouching)
+        {
+            Jump(true);
+            pJumpStart = 3f;
+        }
+        else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && crouching) {
+            Jump(false);
+            pJumpStart = 3f;
+        }
 
-		if(pJumpStart > 0 && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3))){
-			Jump(true);
-			canDiveBomb = true;
-		}
+        //gliding
+        if (!CheckGrounded(5f) && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && canUpdraft && updraftActive && canGlide) {
+            updraftActive = false;
+            Updraft();
+        }
 
-		else if((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && crouching){
-			Jump(false);
-			canDiveBomb = true;
-		}
+        if (!CheckGrounded(5f) && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton3)) && canGlide && !gliding) {
+            Glide();
+        }
 
-		//gliding
-		else if(!grounded && (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton3)) && canGlide && canUpdraft && updraftActive){
-			updraftActive = false;
-			Updraft();
-		}
-
-		else if(!grounded && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton3)) && canGlide && updraftTimer < 0){
-			Glide();
-		}
-
-		else if(updraftTimer < 0){
+        else if ((updraftTimer < 0 && Input.GetKeyUp(KeyCode.S)) || CheckGrounded(5f) && gliding){
 			EndGlide();
 		}
 
 		//DiveBomb
-		canDiveBomb = !grounded;
 
-		if(canDiveBomb && (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2))){
+		if(canDiveBomb && (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton2)) && !grounded){
 			DiveBomb();
-		}
-
-		else if (grounded){
-			EndDiveBomb();
 		}
         
 		//squeak
-		if(canSqueak && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7))){
-			foreach(GameObject box in boxes){
-				uic.SendCode(box.GetComponent<BoxInteract>().Interact());
+		if(canSqueak && (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.JoystickButton7))){
+            aso.clip = squeakClip;
+            aso.Play();
+            foreach (GameObject box in boxes){
+                string code = box.GetComponent<Interactable>().Interact(null);
+                string[] pToScreen = code.Split('-');
+                if (code != "")
+                {
+                    uic.SendCode(pToScreen[0],pToScreen[1]);
+                }
 			}
 		}
 
-		//Interact
+		//Interact -- but not any more cause it's super redundant
 		if(Input.GetKeyDown(KeyCode.M) || Input.GetKeyDown(KeyCode.JoystickButton4)){
 			Interact();
 		}
 
 		//nibble
-		if(Input.GetKeyDown(KeyCode.N)|| Input.GetKeyDown(KeyCode.JoystickButton5)){
+		if(Input.GetKeyDown(KeyCode.Z)|| Input.GetKeyDown(KeyCode.JoystickButton5) && grounded){
 			Nibble();
 		}
 
 		//dig
-		if(canDig && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7))){
-			Dig();
+		if(usbState == (States)2 && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton7)) && grounded){
+            Dig();
 		}
 
 		//radar
-		if(canRadar && (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.JoystickButton8))){
+		if(usbState == (States)0 && (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton8))){
 			radar.GetComponent<Radar>().Ping();
 		}
 
-		//magnet
-		if(canMagnet && Input.GetKey(KeyCode.Z)){
-			foreach(GameObject magnetic in magnetics){
-				magnetic.transform.position = Vector3.MoveTowards(magnetic.transform.position, transform.position, .1f);
-			}
-		}
+        //magnet
+        if(usbState == (States)1 && Input.GetKeyDown(KeyCode.X))
+        {
+            maso.clip = magnetClip;
+            maso.Play();
+            mMMeshRenderer.enabled = true;
+        }
+        if (usbState == (States)1 && Input.GetKey(KeyCode.X))
+        {
+            foreach (Rigidbody magnetic in magnetics)
+            {
+                if (magnetMask.bounds.Contains(magnetic.position))
+                {
+                    magnetic.drag = 4f;
+                }
+                else if (magnetic.gameObject.transform.parent != transform && !magnetMask.bounds.Contains(magnetic.position))
+                {
+					magnetic.drag = 1f;
+                    magnetic.MovePosition(Vector3.MoveTowards(magnetic.position, rb.position, .25f));
+                }
+            }
+        }
+        if(Input.GetKeyUp(KeyCode.X))
+        {
+            maso.Stop();
+            mMMeshRenderer.enabled = false;
+            foreach (Rigidbody magnetic in magnetics)
+            {
+                magnetic.isKinematic = false;
+                magnetic.gameObject.transform.parent = null;
+            }
+        }
     }
+
 	private void Dig(){
-		RaycastHit hit;
+        aso.clip = digClip;
+        aso.Play();
+
+        RaycastHit hit;
 
 		if (Physics.SphereCast(transform.position, 2f, transform.forward, out hit, 2f)){
 			if(hit.transform.tag == "diggable"){
-				uic.SendCode(hit.transform.gameObject.GetComponent<Interactable>().Interact());
+                string code = hit.transform.gameObject.GetComponent<Interactable>().Interact(transform);
+                string[] pToScreen = code.Split('-');
+                uic.SendCode(pToScreen[0],pToScreen[1]);
 			}
 		}
 	}
 
 	private void Nibble(){
-		
-		RaycastHit hit;
+        aso.clip = nibbleClip;
+        aso.Play();
+
+        RaycastHit hit;
 
 		if (Physics.SphereCast(transform.position, 4f, transform.forward, out hit, 4f)){
 			if(hit.transform.tag == "bitable"){
-				hit.transform.gameObject.GetComponent<Interactable>().Interact();
+				hit.transform.gameObject.GetComponent<Interactable>().Interact(transform);
 			}
 		}
 	}
@@ -268,13 +351,12 @@ public class PlayerController : MonoBehaviour {
 
 		if (Physics.SphereCast(transform.position, 4f, transform.forward, out hit, 4f)){
 			if(hit.transform.tag == "interactable"){
-				hit.transform.gameObject.GetComponent<Interactable>().Interact();
+				hit.transform.gameObject.GetComponent<Interactable>().Interact(transform);
 			}
 		}
 	}
 
 	private void Jump(bool super){
-		 
 		 float height;
 
 		 if(super){
@@ -283,58 +365,64 @@ public class PlayerController : MonoBehaviour {
 		 else{
 		 	 height = jumpSpeed;
 		 }
-
+         
 		 if(grounded){
+            aso.clip = jumpClip;
+            aso.Play();
 			ac.SetTrigger("jump");
-			sac.SetTrigger("jump");
 		 	rb.AddForce(Vector3.up * height, ForceMode.Impulse);
 		 }
 	}
 
 	private void Glide(){
-		blades.SetActive(true);
-		bac.SetBool("glide",true);
+        gliding = true;
+        gaso.clip = glideClip;
+        gaso.Play();
 		ac.SetBool("glide",true);
-		walkSpeed = runSpeed;
-		rb.drag = .75f;
-		f.force = Vector3.up * 8.5f;
-	}
-
-	private void EndGlide(){
-		blades.SetActive(false);
-		bac.SetBool("glide",false);
-		ac.SetBool("glide",false);
-		walkSpeed = 4;
-		rb.drag = 0;
-		if(f.force.y > 0){
-			f.force = new Vector3(0,0,0);
-		}
-	}
-
-	private void Updraft(){
-		blades.SetActive(true);
-		bac.SetBool("glide",true);
-		ac.SetBool("glide",true);
-		updraftTimer = 3f;
-		walkSpeed = runSpeed;
-		rb.drag = .75f;
+		walkSpeed = glideSpeed;
 		f.force = Vector3.up * 20f;
 	}
 
+	private void EndGlide(){
+        gliding = false;
+        gaso.Stop();
+		ac.SetBool("glide",false);
+		walkSpeed = defaultWalkSpeed;
+        f.force = new Vector3(0, 0, 0);
+    }
+
+	private void Updraft(){
+		ac.SetBool("glide",true);
+        aso.clip = updraftClip;
+        aso.Play();
+		walkSpeed = runSpeed;
+        rb.AddForce(Vector3.up * 10f, ForceMode.Impulse);
+    }
+
 	private void DiveBomb(){
-		f.force = -Vector3.up * 50f;
+        aso.clip = diveBombClip;
+        aso.Play();
+        f.force = -Vector3.up * 50f;
 	}
 
-	private void EndDiveBomb(){
-		if(f.force.y < 0){
-			f.force = new Vector3(0,0,0);
-		}
-	}
-
-	private bool CheckGrounded(){
+	private bool CheckGrounded(float err){
 		float DistanceToTheGround = boxCollider.bounds.extents.y;
-		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + 0.1f);
-		return IsGrounded;
+        Color rayColor;
+		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + err);
+
+        /*
+		if (IsGrounded)
+        {
+            rayColor = Color.black;
+        }
+        else
+        {
+            rayColor = Color.red;
+        }
+        //Debug.DrawRay(transform.position, Vector3.down.normalized * (DistanceToTheGround + err), rayColor, Time.deltaTime);
+		*/
+
+        return IsGrounded;
 	}
 
 	private void OnTriggerEnter(Collider other){
@@ -342,9 +430,8 @@ public class PlayerController : MonoBehaviour {
 			boxes.Add(other.gameObject);
 		}
 		if(other.tag == "magnetic"){
-			magnetics.Add(other.gameObject);
+			magnetics.Add(other.gameObject.GetComponent<Rigidbody>());
 		}
-		//print(magnetics);
 	}
 
 	private void OnTriggerExit(Collider other){
@@ -352,8 +439,7 @@ public class PlayerController : MonoBehaviour {
 			boxes.Remove(other.gameObject);
 		}
 		if(other.tag == "magnetic"){
-			magnetics.Remove(other.gameObject);
+			magnetics.Remove(other.gameObject.GetComponent<Rigidbody>());
 		}
-		//print(magnetics);
 	}
 }

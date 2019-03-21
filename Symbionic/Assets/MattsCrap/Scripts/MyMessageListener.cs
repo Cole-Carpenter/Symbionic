@@ -117,20 +117,15 @@ public class MyMessageListener : MonoBehaviour {
 	*/
   void PowerUp(String FileCommand){
 			if(FileCommand != null){
-				if(FileCommand.Contains("Dig")){
-					PlayerController.GetComponent<PlayerController>().canDig = true;
-					PlayerController.GetComponent<PlayerController>().canSqueak = false;
-				}else{
-					PlayerController.GetComponent<PlayerController>().canDig = false;
-					PlayerController.GetComponent<PlayerController>().canSqueak = true;
+                if (FileCommand.Contains("Dig") && FileCommand.Contains("Magnet")){
+                    PlayerController.GetComponent<PlayerController>().usbState = States.canRadar;
+                }
+				else if(FileCommand.Contains("Dig")){
+					PlayerController.GetComponent<PlayerController>().usbState = States.canDig;
 				}
-				if(FileCommand.Contains("Magnet")){
-					PlayerController.GetComponent<PlayerController>().canMagnet = true;
-					PlayerController.GetComponent<PlayerController>().canRadar = false;
-                }else{
-					PlayerController.GetComponent<PlayerController>().canMagnet = false;
-					PlayerController.GetComponent<PlayerController>().canRadar = true;
-				}
+				else if(FileCommand.Contains("Magnet")){
+					PlayerController.GetComponent<PlayerController>().usbState = States.canMagnet;
+                }
         }
 	}
 

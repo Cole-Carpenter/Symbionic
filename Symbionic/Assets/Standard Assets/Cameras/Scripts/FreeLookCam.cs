@@ -73,8 +73,8 @@ namespace UnityStandardAssets.Cameras
 			return;
 
             // Read the user directly from the user joystick
-			var x = CrossPlatformInputManager.GetAxis("Horizontal_joy");
-            var y = CrossPlatformInputManager.GetAxis("Vertical_joy");
+			var x = CrossPlatformInputManager.GetAxis("Horizontal");
+            var y = CrossPlatformInputManager.GetAxis("Vertical");
 			//var x = CrossPlatformInputManager.GetAxis("Mouse X");
 			//var y = CrossPlatformInputManager.GetAxis("Mouse Y");
 

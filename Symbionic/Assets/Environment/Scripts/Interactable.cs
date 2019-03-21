@@ -14,7 +14,7 @@ public class Interactable : MonoBehaviour {
 		
 	}
 
-	public virtual string Interact(){
+	public virtual string Interact(Transform player){
 		return "";
 	}
 }
