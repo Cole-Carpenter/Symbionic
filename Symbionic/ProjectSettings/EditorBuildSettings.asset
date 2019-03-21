@@ -8,7 +8,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Meadow.unity
     guid: 136cab17c3a7f9e47a353a695cf4ad01
+  - enabled: 1
+    path: Assets/Scenes/Main Menu.unity
+    guid: e5c660780c2a0374497e8971a031cc78
+  - enabled: 1
+    path: Assets/Scenes/Connor's_Honest-to-Goodness_Whopper_of_a_Scene.unity
+    guid: 09dcb3e39e87a1747b2e3a7ab6c0ced7
   m_configObjects: {}
