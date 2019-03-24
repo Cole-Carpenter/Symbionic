@@ -289,11 +289,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-<<<<<<< HEAD
---- !u!82 &1942007329120063218
-=======
 --- !u!82 &860017359
->>>>>>> e9846479f77dc398e9fb8e310cf1823b908e5165
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
