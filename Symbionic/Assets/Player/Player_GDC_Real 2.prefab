@@ -2126,7 +2126,6 @@ GameObject:
   - component: {fileID: 114776273015319380}
   - component: {fileID: 114735434554092106}
   - component: {fileID: 114786566360249314}
-  - component: {fileID: 102967489}
   m_Layer: 0
   m_Name: Player_GDC_Real 2
   m_TagString: Player
@@ -2395,33 +2394,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 975f19bccd9912d458d0f084b5f6b199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &102967489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1658418399289814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 325a877279bdf7c459ec624a966ba178, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CodeT: {fileID: 0}
-  Q: 0
-  W: 0
-  Audio:
-  - {fileID: 8300000, guid: 5c0b37028870d6244972b32eb0a39640, type: 3}
-  - {fileID: 8300000, guid: 5ffae22bc1727054a96e9088cad430e0, type: 3}
-  - {fileID: 8300000, guid: 5b2c2addd7569e345b43f0e03a855566, type: 3}
-  - {fileID: 8300000, guid: 2f7e04ca2c8688f47a833942dafc474d, type: 3}
-  - {fileID: 8300000, guid: 7a323f7d6e8556c4eafef54df57187d7, type: 3}
-  - {fileID: 8300000, guid: c3bfb5ab4073e574f87dfcb87ca269ab, type: 3}
-  - {fileID: 8300000, guid: e930b4d312ff914408332c75a53b3edd, type: 3}
-  - {fileID: 8300000, guid: fc52670b118f6da4789f74d3a70db2ce, type: 3}
-  - {fileID: 8300000, guid: 246a9930b12292844b2cccd901c0ae3b, type: 3}
-  - {fileID: 8300000, guid: 9509909bab3f0c841b3d726f6be4f0ed, type: 3}
-  - {fileID: 8300000, guid: ff345416c24dccb46b9cf181eee1c92d, type: 3}
 --- !u!1 &1683868097413558
 GameObject:
   m_ObjectHideFlags: 0

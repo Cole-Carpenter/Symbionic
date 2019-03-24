@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour {
 	*/
     // Update is called once per frame
     void Update() {
+        Debug.Log("here");
         //running timers
         runStart -= Time.deltaTime;
         leftStart -= Time.deltaTime;
