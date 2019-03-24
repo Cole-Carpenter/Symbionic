@@ -86,7 +86,11 @@ public class MyMessageListener : MonoBehaviour {
             }
         }*/
         Camera = GameObject.Find("FreeLookCameraRig");
+<<<<<<< HEAD
         CodeT = GameObject.Find("Code_Input").GetComponent<Text>();
+=======
+        CodeT = GameObject.Find("Code_Text").GetComponent<Text>();
+>>>>>>> e9846479f77dc398e9fb8e310cf1823b908e5165
         audioS = Camera.GetComponents<AudioSource>();
         PlayOriginalTrack();
         _controller = GetComponent<PlayerController>();

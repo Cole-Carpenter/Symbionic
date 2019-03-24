@@ -27,7 +27,7 @@ public class StartMenu : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("Cole's_Real_Fucked_Scene");
+        SceneManager.LoadScene("Connor's_Honest-to-Goodness_Whopper_of_a_Scene");
     }
 
     public void Credits()
