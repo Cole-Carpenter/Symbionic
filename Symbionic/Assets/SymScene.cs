@@ -14,7 +14,7 @@ public class SymScene : MonoBehaviour
         player = GameObject.FindObjectOfType<PlayerScene>();
         ui = GameObject.FindObjectOfType<UIScene>();
         p = GameObject.FindObjectOfType<PauseScene>();
-    }
+    }   
 
     // Update is called once per frame
     void Update()

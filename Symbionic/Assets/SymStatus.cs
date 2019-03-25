@@ -15,6 +15,7 @@ public class SymStatus : MonoBehaviour
     public float sqrMaxVelocity = 1f;
     public float jumpSpeed = 1f;
     public float glideSpeed;
+    public float tubeSpeed = 1f;
 
     //audio clips
     public AudioClip squeakClip;
@@ -53,7 +54,7 @@ public class SymStatus : MonoBehaviour
     public bool subMenu = false;
 
     //Menu Data
-    private List<string> codes;
+    public List<string> codes;
     public AudioMixer am;
 
     // Start is called before the first frame update
@@ -87,5 +88,21 @@ public class SymStatus : MonoBehaviour
     public string GetCodeAtIndex(int i)
     {
         return codes[i];
+    }
+    
+    public void SetVolume(string group, float val)
+    {
+        am.SetFloat(group, val);
+    }
+
+    private bool ContainsCode(string check)
+    {
+        return codes.Contains(check);
+    }
+
+    public void AddCode(string toAdd)
+    {
+        if(!ContainsCode(toAdd))
+            codes.Add(toAdd);
     }
 }

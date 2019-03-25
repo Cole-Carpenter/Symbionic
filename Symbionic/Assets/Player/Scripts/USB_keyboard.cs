@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class USB_keyboard : MonoBehaviour {
 
-    private PlayerController controller;
+    private PlayerManager controller;
     
     
     private int count = 0;
 
 	// Use this for initialization
 	void Start () {
-        controller = gameObject.GetComponent<PlayerController>();
+        controller = gameObject.GetComponent<PlayerManager>();
 	}
 	
 	// Update is called once per frame
@@ -21,6 +21,6 @@ public class USB_keyboard : MonoBehaviour {
             count++;
             count = count % 3;
         }
-        controller.usbState = (States)count;
+        SymApp.instance.status.usbState = (States)count;
 	}
 }

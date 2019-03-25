@@ -54,6 +54,7 @@ public class PlayerManager : MonoBehaviour {
         //Running
         if (Input.GetButtonDown("Left"))
         {
+            print("here");
             leftStart = 15f * Time.deltaTime;
         }
 

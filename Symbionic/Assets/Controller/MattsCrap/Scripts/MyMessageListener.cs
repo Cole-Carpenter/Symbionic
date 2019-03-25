@@ -29,7 +29,7 @@ public class MyMessageListener : MonoBehaviour {
 
     private AudioSource[] audioS;
     private GameObject Camera;
-    private PlayerController _controller;
+    private PlayerManager _controller;
     private float currentTime;
 
     private bool fadingIn;
@@ -89,7 +89,7 @@ public class MyMessageListener : MonoBehaviour {
         CodeT = GameObject.Find("Code_Text").GetComponent<Text>();
         audioS = Camera.GetComponents<AudioSource>();
         PlayOriginalTrack();
-        _controller = GetComponent<PlayerController>();
+        _controller = GetComponent<PlayerManager>();
 
         IsPlayingClip = false;
 	}
@@ -134,13 +134,13 @@ public class MyMessageListener : MonoBehaviour {
   void PowerUp(String FileCommand){
 			if(FileCommand != null){
                 if (FileCommand.Contains("Dig") && FileCommand.Contains("Magnet")){
-                    _controller.usbState = States.canRadar;
+                    SymApp.instance.status.usbState = States.canRadar;
                 }
 				else if(FileCommand.Contains("Dig")){
-					_controller.usbState = States.canDig;
+                    SymApp.instance.status.usbState = States.canDig;
 				}
 				else if(FileCommand.Contains("Magnet")){
-					_controller.usbState = States.canMagnet;
+                    SymApp.instance.status.usbState = States.canMagnet;
                 }
         }
 	}
@@ -289,12 +289,12 @@ public class MyMessageListener : MonoBehaviour {
         else if (CodeT.text == "6444")
         {
             Debug.Log("Ability to Glide");
-            _controller.canGlide = true;
+            SymApp.instance.status.canGlide = true;
         }
         else if (CodeT.text == "7285")
         {
             Debug.Log("Glide updraft (Second Jump)");
-            _controller.canUpdraft = true;
+            SymApp.instance.status.canUpdraft = true;
         }
         else if (CodeT.text == "6432")
         {
@@ -303,7 +303,7 @@ public class MyMessageListener : MonoBehaviour {
         else if (CodeT.text == "4512")
         {
             Debug.Log("Dive Bomb");
-            _controller.canDiveBomb = true;
+            SymApp.instance.status.canDiveBomb = true;
         }
 		if(CodeT.text.Length >= 4){
                 CodeT.text = "";

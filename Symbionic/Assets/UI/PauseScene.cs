@@ -46,18 +46,6 @@ public class PauseScene : MonoBehaviour {
         settingsOb.GetComponentInChildren<Slider>().Select();
     }
 
-    
-
-    public void FxChange()
-    {
-        am.SetFloat("FX", Mathf.Log(fx.value) * 20);
-    }
-
-    public void MusicChange()
-    {
-        am.SetFloat("Music", Mathf.Log(music.value) * 20);
-    }
-
     public void ToggleUI(bool toggle)
     {
         pauseMenuUI.SetActive(toggle);

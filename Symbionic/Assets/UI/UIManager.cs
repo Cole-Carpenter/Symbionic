@@ -11,10 +11,16 @@ public class UIManager : MonoBehaviour {
     private float fadeout = 0;
 
     //Canvas Scene objects
-    private UIScene uis = SymApp.instance.scene.ui;
-    private PauseScene ps = SymApp.instance.scene.p;
-    private SymStatus status = SymApp.instance.status;
+    private UIScene uis;
+    private PauseScene ps;
+    private SymStatus status;
 
+    private void Start()
+    {
+        uis = SymApp.instance.scene.ui;
+        ps = SymApp.instance.scene.p;
+        status = SymApp.instance.status;
+    }
     // Update is called once per frame
     void Update () {
         if(fadeout > 0)
@@ -48,7 +54,7 @@ public class UIManager : MonoBehaviour {
 	public void SendCode(string code, string description){
         uis.SetText(code, description);
         fadeout = 20f;
-        ps.AddCode(code, description);
+        AddCode(code, description);
     }
 
     public void Pause(bool state)
@@ -90,14 +96,17 @@ public class UIManager : MonoBehaviour {
 
     public void AddCode(string code, string description)
     {
-        foreach (string phrase in codes)
-        {
-            if (code == phrase.Trim(' '))
-            {
-                return;
-            }
-        }
-        codes.Add(code);
-        codes.Add(description);
+        status.AddCode(code);
+        status.AddCode(description);
+    }
+
+    public void FxChange()
+    {
+        status.SetVolume("FX", Mathf.Log(ps.fx.value) * 20);
+    }
+
+    public void MusicChange()
+    {
+        status.SetVolume("Music", Mathf.Log(ps.music.value) * 20);
     }
 }
