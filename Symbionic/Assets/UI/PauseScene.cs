@@ -46,18 +46,7 @@ public class PauseScene : MonoBehaviour {
         settingsOb.GetComponentInChildren<Slider>().Select();
     }
 
-    public void AddCode(string code, string description)
-    {
-        foreach(string phrase in codes)
-        {
-            if (code == phrase.Trim(' '))
-            {
-                return;
-            }
-        }
-        codes.Add(code);
-        codes.Add(description);
-    }
+    
 
     public void FxChange()
     {
