@@ -6,7 +6,6 @@ public class PlayerScene : MonoBehaviour
 {
     //Components
     public Animator ac;
-    public GameObject radar;
     public Renderer track;
     public Collider boxCollider;
     private Rigidbody rb;
@@ -14,12 +13,14 @@ public class PlayerScene : MonoBehaviour
     private AudioSource gaso;
     private AudioSource maso;
     private ConstantForce f;
-    private Collider magnetMask;
     private MeshRenderer mMMeshRenderer;
 
     //Raycast Variables
     RaycastHit hit;
     float distToGround;
+
+    //Coroutine containers
+    Coroutine lastRadar;
 
     SymStatus status;
 
@@ -33,8 +34,7 @@ public class PlayerScene : MonoBehaviour
         gaso = transform.Find("SymbionicIdle").GetComponent<AudioSource>();
         maso = transform.Find("MagnetMask").GetComponent<AudioSource>();
         f = GetComponent<ConstantForce>();
-        magnetMask = transform.Find("MagnetMask").GetComponent<SphereCollider>();
-        mMMeshRenderer = magnetMask.GetComponent<MeshRenderer>();
+        mMMeshRenderer = transform.Find("MagnetMask").GetComponent<MeshRenderer>();
         distToGround = GetComponent<Collider>().bounds.extents.y;
     }
 
@@ -204,16 +204,25 @@ public class PlayerScene : MonoBehaviour
 
     public void MagnetPull()
     {
-        foreach (Rigidbody magnetic in status.magnetics)
+        Collider[] magnets = Physics.OverlapSphere(transform.position, 80f, LayerMask.GetMask("Magnetic"));
+        Collider[] innerMagnets = Physics.OverlapSphere(transform.position, 5f, LayerMask.GetMask("Magnetic"));
+        print("magnets: " + magnets.Length + " innerMagnets: " + innerMagnets.Length);
+        foreach (Collider magnetic in magnets)
         {
-            if (magnetMask.bounds.Contains(magnetic.position))
+            bool magnetFound = false;
+            foreach(Collider innerMagnet in innerMagnets)
             {
-                magnetic.drag = 4f;
+                if (innerMagnet == magnetic)
+                    magnetFound = true;
             }
-            else if (magnetic.gameObject.transform.parent != transform && !magnetMask.bounds.Contains(magnetic.position))
+            if(magnetFound)
             {
-                magnetic.drag = 1f;
-                magnetic.MovePosition(Vector3.MoveTowards(magnetic.position, rb.position, .25f));
+                magnetic.GetComponent<Rigidbody>().drag = 4f;
+            }
+            else
+            {
+                magnetic.GetComponent<Rigidbody>().drag = 1f;
+                magnetic.GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(magnetic.transform.position, rb.position, .8f / Mathf.Pow(Mathf.Log((magnetic.transform.position - rb.position).sqrMagnitude), 2)));
             }
         }
     }
@@ -269,6 +278,26 @@ public class PlayerScene : MonoBehaviour
         if (other.tag == "magnetic")
         {
             status.magnetics.Remove(other.gameObject.GetComponent<Rigidbody>());
+        }
+    }
+
+    public void Ping()
+    {
+        if (lastRadar != null)
+            StopCoroutine(lastRadar);
+        Collider[] boxesToPing = Physics.OverlapSphere(transform.position,200f,LayerMask.GetMask("Boxes"));
+        print(boxesToPing.Length);
+        lastRadar = StartCoroutine(PingSound(boxesToPing.Length));
+    }
+
+    private IEnumerator PingSound(float n)
+    {
+        yield return new WaitForSeconds(3f);
+        for (int i = 0; i < n; i++)
+        {
+            aso.clip = status.radarClip;
+            aso.Play();
+            yield return new WaitForSeconds(3f);
         }
     }
 }

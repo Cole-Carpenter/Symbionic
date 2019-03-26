@@ -29,6 +29,7 @@ public class SymStatus : MonoBehaviour
     public AudioClip updraftClip;
     public AudioClip magnetClip;
     public AudioClip digClip;
+    public AudioClip radarClip;
 
     //states
     public bool gliding = false;

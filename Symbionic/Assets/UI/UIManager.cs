@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour {
             status.currSubMenu.SetActive(false);
             ps.FlipButtons();
             status.subMenu = false;
-            ps.codeButton.Select();
+            StartCoroutine(ps.OnPauseStart());
         }
         //pause
         else if (Input.GetButtonDown("Pause"))
@@ -80,14 +80,12 @@ public class UIManager : MonoBehaviour {
     public void Code()
     {
         ps.CodeCanvas();
-        status.currSubMenu = ps.codeList;
         status.subMenu = true;
     }
 
     public void Settings()
     {
         ps.SettingsCanvas();
-        status.currSubMenu = ps.settingsOb;
         status.subMenu = true;
     }
 
@@ -104,11 +102,11 @@ public class UIManager : MonoBehaviour {
 
     public void FxChange()
     {
-        status.SetVolume("FX", Mathf.Log(ps.fx.value) * 20);
+        status.SetVolume("FX", Mathf.Log(ps.GetSliderValue("fx")) * 20);
     }
 
     public void MusicChange()
     {
-        status.SetVolume("Music", Mathf.Log(ps.music.value) * 20);
+        status.SetVolume("Music", Mathf.Log(ps.GetSliderValue("music")) * 20);
     }
 }

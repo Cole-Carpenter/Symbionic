@@ -11,12 +11,17 @@ public class PlayerManager : MonoBehaviour {
 
     private int usb_count = 0;
 
-    //timers
-    private float runStart = 0f;
-    private float leftStart = 0f;
-    private float rightStart = 0f;
-    private float pJumpStart = 0f;
-    private float updraftTimer = 0f;
+    //toggles
+    private bool runStart = false;
+    private bool leftStart = false;
+    private bool rightStart = false;
+    private bool pJumpActive = false;
+
+    //coroutine containers
+    Coroutine lastLeft;
+    Coroutine lastRight;
+    Coroutine lastRun;
+    Coroutine lastPjump;
 
     //scene and status
     SymStatus status;
@@ -45,13 +50,6 @@ public class PlayerManager : MonoBehaviour {
 
     void Update()
     {
-        //running timers
-        runStart -= Time.deltaTime;
-        leftStart -= Time.deltaTime;
-        rightStart -= Time.deltaTime;
-        pJumpStart -= Time.deltaTime;
-        updraftTimer -= Time.deltaTime;
-
         if (CheckGrounded(.001f) == true)
         {
             status.grounded = true;
@@ -63,39 +61,31 @@ public class PlayerManager : MonoBehaviour {
             status.grounded = false;
             player.ac.SetBool("grounded", false);
         }
-
-
-
+        
         //Running
         if (Input.GetButtonDown("Left"))
         {
-            leftStart = 15f * Time.deltaTime;
+            if (lastLeft != null)
+                StopCoroutine(lastLeft);
+            lastLeft = StartCoroutine(StartLeft(2f));
         }
-
         if (Input.GetButtonDown("Right"))
         {
-            rightStart = 15f * Time.deltaTime;
+            if(lastRight != null)
+                StopCoroutine(lastRight);
+            lastRight = StartCoroutine(StartRight(2f));
         }
 
-        if (runActive && rightStart > 0 && leftStart > 0)
+        if (runActive && Input.GetButtonDown("Right") && Input.GetButtonDown("Left"))
         {
-            player.StartRun();
-            status.running = true;
-            runStart = 3f * Time.deltaTime;
+            if(lastRun != null)
+                StopCoroutine(lastRun);
+            lastRun = StartCoroutine(StartRun(1f));
         }
 
-        else if (rightStart > 0 && leftStart > 0)
+        else if (Input.GetButtonDown("Right") && Input.GetButtonDown("Left") && leftStart && rightStart)
         {
             runActive = true;
-            leftStart = 0;
-            rightStart = 0;
-        }
-
-        else if (status.running && runStart < 0)
-        {
-            runActive = false;
-            status.running = false;
-            player.StopRun();
         }
 
         //walking and turning
@@ -122,8 +112,7 @@ public class PlayerManager : MonoBehaviour {
         //crouching and jumping
         if (Input.GetButtonDown("Crouch"))
         {
-            pJumpStart = 3f;
-            pJumpStartSoundActive = true;
+            lastPjump = StartCoroutine(PJump());
         }
         if (Input.GetButton("Crouch"))
         {
@@ -132,25 +121,20 @@ public class PlayerManager : MonoBehaviour {
         }
         else
         {
+            if (lastPjump != null)
+                StopCoroutine(lastPjump);
+            pJumpActive = false;
             status.crouching = false;
             player.ac.SetBool("crouch", false);
         }
 
-        if (pJumpStart < 0f && pJumpStartSoundActive && status.crouching)
-        {
-            pJumpStartSoundActive = false;
-            player.PerfectJumpAntic();
-        }
-
-        if (pJumpStart < 0 && Input.GetButtonDown("Jump") && status.crouching)
+        if (pJumpActive && Input.GetButtonDown("Jump") && status.crouching)
         {
             player.Jump(true);
-            pJumpStart = 3f;
         }
         else if (Input.GetButtonDown("Jump") && status.crouching)
         {
             player.Jump(false);
-            pJumpStart = 3f;
         }
 
         //gliding
@@ -168,7 +152,7 @@ public class PlayerManager : MonoBehaviour {
             player.Glide();
         }
 
-        else if ((updraftTimer < 0 && Input.GetKeyUp(KeyCode.S)) || CheckGrounded(.001f) && status.gliding)
+        else if ((Input.GetButtonUp("Jump")) || CheckGrounded(.001f) && status.gliding)
         {
             player.EndGlide();
             status.gliding = false;
@@ -218,7 +202,7 @@ public class PlayerManager : MonoBehaviour {
         //radar
         if (status.usbState == (States)0 && Input.GetButtonDown("USBButton"))
         {
-            player.radar.GetComponent<Radar>().Ping();
+            player.Ping();
         }
 
         //magnet
@@ -245,7 +229,44 @@ public class PlayerManager : MonoBehaviour {
         status.usbState = (States)usb_count;
     }
 
-	private bool CheckGrounded(float err){
+    //coroutines for running
+    private IEnumerator StartLeft(float time)
+    {
+        leftStart = true;
+        yield return new WaitForSeconds(time);
+        leftStart = false;
+    }
+    private IEnumerator StartRight(float time)
+    {
+        rightStart = true;
+        yield return new WaitForSeconds(time);
+        
+        rightStart = false;
+    }
+    private IEnumerator StartRun(float time)
+    {
+        status.running = true;
+        player.StartRun();
+        yield return new WaitForSeconds(time);
+        player.StopRun();
+        runActive = false;
+        status.running = false;
+    }
+
+    //coroutine for perfect jump
+    private IEnumerator PJump()
+    {
+        pJumpStartSoundActive = true;
+        yield return new WaitForSeconds(3f);
+        if (Input.GetButton("Crouch"))
+        {
+            pJumpActive = true;
+            pJumpStartSoundActive = false;
+            player.PerfectJumpAntic();
+        }
+    }
+
+    private bool CheckGrounded(float err){
 		float DistanceToTheGround = player.boxCollider.bounds.extents.y;
 		bool IsGrounded = Physics.Raycast(player.transform.position, Vector3.down, DistanceToTheGround + err);
 

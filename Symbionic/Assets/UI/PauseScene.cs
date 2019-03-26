@@ -8,14 +8,13 @@ public class PauseScene : MonoBehaviour {
 
     public enum PauseStates {Codes, Quit};
 
-    public GameObject pauseMenuUI;
-    public GameObject settingsOb;
-    public GameObject codeList;
-    public Button codeButton;
-    public Button settingsButton;
-    public Button quitButton;
-    public Slider fx;
-    public Slider music;
+    private GameObject settingsOb;
+    private GameObject codeList;
+    private Button codeButton;
+    private Button settingsButton;
+    private Button quitButton;
+    private Slider fx;
+    private Slider music;
 
     public SymStatus status;
 
@@ -23,6 +22,30 @@ public class PauseScene : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.001f);
         status = SymApp.Instance.status;
+        codeButton = transform.Find("Codes").GetComponent<Button>();
+        settingsButton = transform.Find("Settings").GetComponent<Button>();
+        quitButton = transform.Find("Quit").GetComponent<Button>();
+        codeList = transform.Find("CodeList").gameObject;
+        settingsOb = transform.Find("SettingsList").gameObject;
+        fx = settingsOb.transform.Find("FX Slider").GetComponent<Slider>();
+        music = settingsOb.transform.Find("Music Slider").GetComponent<Slider>();
+        codeButton.onClick.AddListener(SymApp.Instance.manager.ui.Code);
+        settingsButton.onClick.AddListener(SymApp.Instance.manager.ui.Settings);
+        quitButton.onClick.AddListener(SymApp.Instance.manager.ui.Quit);
+    }
+
+    public void Update()
+    {
+        if (status.paused)
+        {
+            if (EventSystem.current.currentSelectedGameObject == null)
+            {
+                if (status.currSubMenu == settingsOb && status.subMenu)
+                    music.Select();
+                else
+                    codeButton.Select();
+            }
+        }
     }
 
     public void FlipButtons()
@@ -34,6 +57,8 @@ public class PauseScene : MonoBehaviour {
 
     public void CodeCanvas()
     {
+        status.currSubMenu = codeList;
+        EventSystem.current.SetSelectedGameObject(null);
         FlipButtons();
         codeList.SetActive(true);
         Text t = codeList.GetComponentInChildren<Text>();
@@ -47,6 +72,7 @@ public class PauseScene : MonoBehaviour {
 
     public void SettingsCanvas()
     {
+        status.currSubMenu = settingsOb;
         FlipButtons();
         settingsOb.SetActive(true);
         settingsOb.GetComponentInChildren<Slider>().Select();
@@ -54,6 +80,30 @@ public class PauseScene : MonoBehaviour {
 
     public void ToggleUI(bool toggle)
     {
-        pauseMenuUI.SetActive(toggle);
+        GetComponent<Image>().enabled = toggle;
+        transform.Find("Paused").gameObject.SetActive(toggle);
+        codeButton.gameObject.SetActive(toggle);
+        settingsButton.gameObject.SetActive(toggle);
+        quitButton.gameObject.SetActive(toggle);
+        transform.Find("EventSystem").gameObject.SetActive(toggle);
+    }
+
+    public IEnumerator OnPauseStart()
+    {
+        yield return 0;
+        codeButton.Select();
+    }
+
+    public float GetSliderValue(string mixer)
+    {
+        if(mixer == "fx")
+        {
+            return fx.value;
+        }
+        else if(mixer == "music")
+        {
+            return music.value;
+        }
+        return 0;
     }
 }
