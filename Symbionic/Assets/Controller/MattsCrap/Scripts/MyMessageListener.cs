@@ -134,13 +134,13 @@ public class MyMessageListener : MonoBehaviour {
   void PowerUp(String FileCommand){
 			if(FileCommand != null){
                 if (FileCommand.Contains("Dig") && FileCommand.Contains("Magnet")){
-                    SymApp.instance.status.usbState = States.canRadar;
+                    SymApp.Instance.status.usbState = States.canRadar;
                 }
 				else if(FileCommand.Contains("Dig")){
-                    SymApp.instance.status.usbState = States.canDig;
+                    SymApp.Instance.status.usbState = States.canDig;
 				}
 				else if(FileCommand.Contains("Magnet")){
-                    SymApp.instance.status.usbState = States.canMagnet;
+                    SymApp.Instance.status.usbState = States.canMagnet;
                 }
         }
 	}
@@ -289,12 +289,12 @@ public class MyMessageListener : MonoBehaviour {
         else if (CodeT.text == "6444")
         {
             Debug.Log("Ability to Glide");
-            SymApp.instance.status.canGlide = true;
+            SymApp.Instance.status.canGlide = true;
         }
         else if (CodeT.text == "7285")
         {
             Debug.Log("Glide updraft (Second Jump)");
-            SymApp.instance.status.canUpdraft = true;
+            SymApp.Instance.status.canUpdraft = true;
         }
         else if (CodeT.text == "6432")
         {
@@ -303,7 +303,7 @@ public class MyMessageListener : MonoBehaviour {
         else if (CodeT.text == "4512")
         {
             Debug.Log("Dive Bomb");
-            SymApp.instance.status.canDiveBomb = true;
+            SymApp.Instance.status.canDiveBomb = true;
         }
 		if(CodeT.text.Length >= 4){
                 CodeT.text = "";

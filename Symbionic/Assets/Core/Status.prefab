@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3820923209087131357
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3820923209087131356}
+  - component: {fileID: 3820923209087131355}
+  - component: {fileID: 3820923209087131354}
+  m_Layer: 0
+  m_Name: Status
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3820923209087131356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3820923209087131357}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3820923209087131355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3820923209087131357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 285c0fecb654c1a43af24f7376ebd73f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateSpeed: 50
+  walkSpeed: 10
+  runSpeed: 20
+  sqrMaxVelocity: 2000
+  jumpSpeed: 30
+  glideSpeed: 20
+  tubeSpeed: 1
+  squeakClip: {fileID: 0}
+  pJumpClip: {fileID: 0}
+  jumpClip: {fileID: 0}
+  diveBombClip: {fileID: 0}
+  glideClip: {fileID: 0}
+  nibbleClip: {fileID: 0}
+  updraftClip: {fileID: 0}
+  magnetClip: {fileID: 0}
+  digClip: {fileID: 0}
+  gliding: 0
+  crouching: 0
+  grounded: 1
+  running: 0
+  boxes: []
+  magnetics: []
+  canGlide: 0
+  canDiveBomb: 0
+  canUpdraft: 0
+  canSqueak: 1
+  usbState: 0
+  currSubMenu: {fileID: 0}
+  paused: 0
+  subMenu: 0
+  codes: []
+  am: {fileID: 0}
+--- !u!114 &3820923209087131354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3820923209087131357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b1a9e28c0ee82b48a508ebd7c50deb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  status: {fileID: 0}
+  manager: {fileID: 0}
+  scene: {fileID: 0}

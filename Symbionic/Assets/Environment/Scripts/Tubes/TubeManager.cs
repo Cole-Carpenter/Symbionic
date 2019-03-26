@@ -9,12 +9,13 @@ public class TubeManager : Interactable {
     public bool activated = false;
     public bool firstPoint;
 
-    private SymStatus status = SymApp.instance.status;
+    private SymStatus status;
     private TubeScene tube;
 
     // Use this for initialization
-    void Start () {
-        realSpeed = status.tubeSpeed / 10;
+    IEnumerator Start () {
+        yield return new WaitForSeconds(0.001f);
+        status = SymApp.Instance.status;
     }
 
     // Update is called once per frame

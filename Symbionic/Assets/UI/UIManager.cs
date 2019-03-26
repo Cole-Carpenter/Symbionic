@@ -15,12 +15,14 @@ public class UIManager : MonoBehaviour {
     private PauseScene ps;
     private SymStatus status;
 
-    private void Start()
+    private IEnumerator Start()
     {
-        uis = SymApp.instance.scene.ui;
-        ps = SymApp.instance.scene.p;
-        status = SymApp.instance.status;
+        yield return new WaitForSeconds(.001f);
+        uis = SymApp.Instance.scene.ui;
+        ps = SymApp.Instance.scene.p;
+        status = SymApp.Instance.status;
     }
+
     // Update is called once per frame
     void Update () {
         if(fadeout > 0)
@@ -64,11 +66,11 @@ public class UIManager : MonoBehaviour {
             ps.ToggleUI(false);
             Time.timeScale = 1f;
             status.paused = false;
-            SymApp.instance.manager.playerManager.enabled = true;
+            SymApp.Instance.manager.playerManager.enabled = true;
         }
         else
         {
-            SymApp.instance.manager.playerManager.enabled = false;
+            SymApp.Instance.manager.playerManager.enabled = false;
             ps.ToggleUI(true);
             Time.timeScale = 0f;
             status.paused = true;

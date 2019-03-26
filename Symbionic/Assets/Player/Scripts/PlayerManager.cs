@@ -9,12 +9,19 @@ public class PlayerManager : MonoBehaviour {
     public bool runActive = false;
     public bool pJumpStartSoundActive = false;
 
+    private int usb_count = 0;
+
     //timers
     private float runStart = 0f;
     private float leftStart = 0f;
     private float rightStart = 0f;
     private float pJumpStart = 0f;
     private float updraftTimer = 0f;
+
+    //scene and status
+    SymStatus status;
+    PlayerScene player;
+
     /*
 	 0f - left
 	 2 - crouch
@@ -28,6 +35,14 @@ public class PlayerManager : MonoBehaviour {
 
 	*/
     // Update is called once per frame
+
+    IEnumerator Start()
+    {
+        yield return new WaitForSeconds(.001f);
+        status = SymApp.Instance.status;
+        player = SymApp.Instance.scene.player;
+    }
+
     void Update()
     {
         //running timers
@@ -39,14 +54,14 @@ public class PlayerManager : MonoBehaviour {
 
         if (CheckGrounded(.001f) == true)
         {
-            SymApp.instance.status.grounded = true;
-            SymApp.instance.scene.player.ac.SetBool("grounded", true);
+            status.grounded = true;
+            player.ac.SetBool("grounded", true);
             updraftActive = true;
         }
         else
         {
-            SymApp.instance.status.grounded = false;
-            SymApp.instance.scene.player.ac.SetBool("grounded", false);
+            status.grounded = false;
+            player.ac.SetBool("grounded", false);
         }
 
 
@@ -54,7 +69,6 @@ public class PlayerManager : MonoBehaviour {
         //Running
         if (Input.GetButtonDown("Left"))
         {
-            print("here");
             leftStart = 15f * Time.deltaTime;
         }
 
@@ -65,8 +79,8 @@ public class PlayerManager : MonoBehaviour {
 
         if (runActive && rightStart > 0 && leftStart > 0)
         {
-            SymApp.instance.scene.player.StartRun();
-            SymApp.instance.status.running = true;
+            player.StartRun();
+            status.running = true;
             runStart = 3f * Time.deltaTime;
         }
 
@@ -77,32 +91,32 @@ public class PlayerManager : MonoBehaviour {
             rightStart = 0;
         }
 
-        else if (SymApp.instance.status.running && runStart < 0)
+        else if (status.running && runStart < 0)
         {
             runActive = false;
-            SymApp.instance.status.running = false;
-            SymApp.instance.scene.player.StopRun();
+            status.running = false;
+            player.StopRun();
         }
 
         //walking and turning
-        else if (!SymApp.instance.status.running && Input.GetButton("Left") && Input.GetButton("Right"))
+        else if (!status.running && Input.GetButton("Left") && Input.GetButton("Right"))
         {
-            SymApp.instance.scene.player.Walk();
+            player.Walk();
         }
 
-        else if (!SymApp.instance.status.running && Input.GetButton("Left"))
+        else if (!status.running && Input.GetButton("Left"))
         {
-            SymApp.instance.scene.player.Row(-1);
+            player.Row(-1);
         }
 
-        else if (!SymApp.instance.status.running && Input.GetButton("Right"))
+        else if (!status.running && Input.GetButton("Right"))
         {
-            SymApp.instance.scene.player.Row(1);
+            player.Row(1);
         }
 
         else
         {
-            SymApp.instance.scene.player.StopWalk();
+            player.StopWalk();
         }
 
         //crouching and jumping
@@ -113,72 +127,72 @@ public class PlayerManager : MonoBehaviour {
         }
         if (Input.GetButton("Crouch"))
         {
-            SymApp.instance.status.crouching = true;
-            SymApp.instance.scene.player.ac.SetBool("crouch", true);
+            status.crouching = true;
+            player.ac.SetBool("crouch", true);
         }
         else
         {
-            SymApp.instance.status.crouching = false;
-            SymApp.instance.scene.player.ac.SetBool("crouch", false);
+            status.crouching = false;
+            player.ac.SetBool("crouch", false);
         }
 
-        if (pJumpStart < 0f && pJumpStartSoundActive && SymApp.instance.status.crouching)
+        if (pJumpStart < 0f && pJumpStartSoundActive && status.crouching)
         {
             pJumpStartSoundActive = false;
-            SymApp.instance.scene.player.PerfectJumpAntic();
+            player.PerfectJumpAntic();
         }
 
-        if (pJumpStart < 0 && Input.GetButtonDown("Jump") && SymApp.instance.status.crouching)
+        if (pJumpStart < 0 && Input.GetButtonDown("Jump") && status.crouching)
         {
-            SymApp.instance.scene.player.Jump(true);
+            player.Jump(true);
             pJumpStart = 3f;
         }
-        else if (Input.GetButtonDown("Jump") && SymApp.instance.status.crouching)
+        else if (Input.GetButtonDown("Jump") && status.crouching)
         {
-            SymApp.instance.scene.player.Jump(false);
+            player.Jump(false);
             pJumpStart = 3f;
         }
 
         //gliding
-        if (!CheckGrounded(5f) && Input.GetButtonDown("Jump") && SymApp.instance.status.canUpdraft && updraftActive && SymApp.instance.status.canGlide)
+        if (!CheckGrounded(.001f) && Input.GetButtonDown("Jump") && status.canUpdraft && updraftActive && status.canGlide)
         {
             updraftActive = false;
-            SymApp.instance.status.walkSpeed = SymApp.instance.status.runSpeed;
-            SymApp.instance.scene.player.Updraft();
+            status.walkSpeed = status.runSpeed;
+            player.Updraft();
         }
 
-        if (!CheckGrounded(5f) && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton0)) && SymApp.instance.status.canGlide && !SymApp.instance.status.gliding)
+        if (!CheckGrounded(.001f) && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.JoystickButton0)) && status.canGlide && !status.gliding)
         {
-            SymApp.instance.status.gliding = true;
-            SymApp.instance.status.walkSpeed = SymApp.instance.status.glideSpeed;
-            SymApp.instance.scene.player.Glide();
+            status.gliding = true;
+            status.walkSpeed = status.glideSpeed;
+            player.Glide();
         }
 
-        else if ((updraftTimer < 0 && Input.GetKeyUp(KeyCode.S)) || CheckGrounded(5f) && SymApp.instance.status.gliding)
+        else if ((updraftTimer < 0 && Input.GetKeyUp(KeyCode.S)) || CheckGrounded(.001f) && status.gliding)
         {
-            SymApp.instance.scene.player.EndGlide();
-            SymApp.instance.status.gliding = false;
-            SymApp.instance.status.ResetWalkSpeed();
+            player.EndGlide();
+            status.gliding = false;
+            status.ResetWalkSpeed();
         }
 
         //DiveBomb
 
-        if (SymApp.instance.status.canDiveBomb && Input.GetButtonDown("Crouch") && !SymApp.instance.status.grounded)
+        if (status.canDiveBomb && Input.GetButtonDown("Crouch") && !status.grounded)
         {
-            SymApp.instance.scene.player.DiveBomb();
+            player.DiveBomb();
         }
 
         //squeak
-        if (SymApp.instance.status.canSqueak && Input.GetButtonDown("Squeak"))
+        if (status.canSqueak && Input.GetButtonDown("Squeak"))
         {
-            SymApp.instance.scene.player.Squeak();
-            foreach (GameObject box in SymApp.instance.status.boxes)
+            player.Squeak();
+            foreach (GameObject box in status.boxes)
             {
                 string code = box.GetComponent<Interactable>().Interact(null);
                 string[] pToScreen = code.Split('-');
                 if (code != "")
                 {
-                    SymApp.instance.manager.ui.SendCode(pToScreen[0], pToScreen[1]);
+                    SymApp.Instance.manager.ui.SendCode(pToScreen[0], pToScreen[1]);
                 }
             }
         }
@@ -186,48 +200,57 @@ public class PlayerManager : MonoBehaviour {
         //Interact -- but not any more cause it's super redundant
         if (Input.GetButtonDown("Interact"))
         {
-            SymApp.instance.scene.player.Interact();
+            player.Interact();
         }
 
         //nibble
-        if (Input.GetButtonDown("Nibble") && SymApp.instance.status.grounded)
+        if (Input.GetButtonDown("Nibble") && status.grounded)
         {
-            SymApp.instance.scene.player.Nibble();
+            player.Nibble();
         }
 
         //dig
-        if (SymApp.instance.status.usbState == (States)2 && Input.GetKeyDown("USB_Button") && SymApp.instance.status.grounded)
+        if (status.usbState == (States)2 && Input.GetButtonDown("USBButton") && status.grounded)
         {
-            SymApp.instance.scene.player.Dig();
+            player.Dig();
         }
 
         //radar
-        if (SymApp.instance.status.usbState == (States)0 && Input.GetKeyDown("USB_Button"))
+        if (status.usbState == (States)0 && Input.GetButtonDown("USBButton"))
         {
-            SymApp.instance.scene.player.radar.GetComponent<Radar>().Ping();
+            player.radar.GetComponent<Radar>().Ping();
         }
 
         //magnet
-        if (SymApp.instance.status.usbState == (States)1 && Input.GetKeyDown("USB_Button"))
+        if (status.usbState == (States)1 && Input.GetButtonDown("USBButton"))
         {
-            SymApp.instance.scene.player.Magnet();
+            player.Magnet();
             
         }
-        if (SymApp.instance.status.usbState == (States)1 && Input.GetButton("USB_Button"))
+        if (status.usbState == (States)1 && Input.GetButton("USBButton"))
         {
-            SymApp.instance.scene.player.MagnetPull();
+            player.MagnetPull();
         }
-        if (Input.GetButtonUp("USB_Button"))
+        if (Input.GetButtonUp("USBButton"))
         {
-            SymApp.instance.scene.player.MagnetEnd();
+            player.MagnetEnd();
         }
+
+        //swap usb states manually
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            usb_count++;
+            usb_count = usb_count % 3;
+        }
+        status.usbState = (States)usb_count;
     }
 
 	private bool CheckGrounded(float err){
-		float DistanceToTheGround = SymApp.instance.scene.player.boxCollider.bounds.extents.y;
-		bool IsGrounded = Physics.Raycast(transform.position, Vector3.down, DistanceToTheGround + err);
+		float DistanceToTheGround = player.boxCollider.bounds.extents.y;
+		bool IsGrounded = Physics.Raycast(player.transform.position, Vector3.down, DistanceToTheGround + err);
 
         /*
+         * If I ever need the ray drawn out to debug
         Color rayColor;
 		if (IsGrounded)
         {
@@ -237,27 +260,9 @@ public class PlayerManager : MonoBehaviour {
         {
             rayColor = Color.red;
         }
-        //Debug.DrawRay(transform.position, Vector3.down.normalized * (DistanceToTheGround + err), rayColor, Time.deltaTime);
+        Debug.DrawRay(player.transform.position, Vector3.down.normalized * (DistanceToTheGround + err), rayColor, Time.deltaTime);
 		*/
 
         return IsGrounded;
-	}
-
-	private void OnTriggerEnter(Collider other){
-		if(other.tag == "box"){
-			SymApp.instance.status.boxes.Add(other.gameObject);
-		}
-		if(other.tag == "magnetic"){
-			SymApp.instance.status.magnetics.Add(other.gameObject.GetComponent<Rigidbody>());
-		}
-	}
-
-	private void OnTriggerExit(Collider other){
-		if(other.tag == "box"){
-			SymApp.instance.status.boxes.Remove(other.gameObject);
-		}
-		if(other.tag == "magnetic"){
-			SymApp.instance.status.magnetics.Remove(other.gameObject.GetComponent<Rigidbody>());
-		}
 	}
 }

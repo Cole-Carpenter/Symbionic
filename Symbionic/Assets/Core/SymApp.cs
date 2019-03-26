@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+//core app entrypoint class
 public class SymApp : MonoBehaviour
 {
+    //references to all central app scripts
     public SymStatus status;
     public SymManager manager;
     public SymScene scene;

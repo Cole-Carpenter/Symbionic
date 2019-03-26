@@ -21,9 +21,12 @@ public class PlayerScene : MonoBehaviour
     RaycastHit hit;
     float distToGround;
 
+    SymStatus status;
 
-    void Start()
+    IEnumerator Start()
     {
+        yield return new WaitForSeconds(0.001f);
+        status = SymApp.Instance.status;
         ac = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
         aso = GetComponent<AudioSource>();
@@ -38,12 +41,12 @@ public class PlayerScene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SymApp.instance.status.running)
+        if (status.running)
         {
             rb.drag = 1;
-            if (rb.velocity.sqrMagnitude < SymApp.instance.status.sqrMaxVelocity)
+            if (rb.velocity.sqrMagnitude < status.sqrMaxVelocity)
             {
-                rb.AddForce(transform.forward * SymApp.instance.status.runSpeed * Time.deltaTime, ForceMode.Acceleration);
+                rb.AddForce(transform.forward * status.runSpeed * Time.deltaTime, ForceMode.Acceleration);
             }
         }
     }
@@ -65,8 +68,8 @@ public class PlayerScene : MonoBehaviour
         rb.drag = 4f;
         ac.SetBool("walking", true);
         track.material.SetFloat("_Speed2", 6f);
-        rb.AddForce(0.5f * transform.forward * SymApp.instance.status.walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(s * Vector3.up * SymApp.instance.status.rotateSpeed * Time.deltaTime));
+        rb.AddForce(0.5f * transform.forward * status.walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(s * Vector3.up * status.rotateSpeed * Time.deltaTime));
     }
 
     public void Walk()
@@ -74,14 +77,14 @@ public class PlayerScene : MonoBehaviour
         rb.drag = 4f;
         ac.SetBool("walking", true);
         track.material.SetFloat("_Speed2", 6f);
-        rb.AddForce(transform.forward * SymApp.instance.status.walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
+        rb.AddForce(transform.forward * status.walkSpeed * Time.deltaTime, ForceMode.VelocityChange);
     }
 
     public void StopWalk()
     {
         ac.SetBool("walking", false);
         track.material.SetFloat("_Speed2", 0f);
-        if (rb.velocity != new Vector3(0, 0, 0) && SymApp.instance.status.grounded)
+        if (rb.velocity != new Vector3(0, 0, 0) && status.grounded)
         {
             rb.drag = 4f;
         }
@@ -89,7 +92,7 @@ public class PlayerScene : MonoBehaviour
 
     public void PerfectJumpAntic()
     {
-        aso.clip = SymApp.instance.status.pJumpClip;
+        aso.clip = status.pJumpClip;
         aso.Play();
     }
 
@@ -99,16 +102,16 @@ public class PlayerScene : MonoBehaviour
 
         if (super)
         {
-            height = SymApp.instance.status.jumpSpeed * 2;
+            height = status.jumpSpeed * 2;
         }
         else
         {
-            height = SymApp.instance.status.jumpSpeed;
+            height = status.jumpSpeed;
         }
 
-        if (SymApp.instance.status.grounded)
+        if (status.grounded)
         {
-            aso.clip = SymApp.instance.status.jumpClip;
+            aso.clip = status.jumpClip;
             aso.Play();
             ac.SetTrigger("jump");
             rb.AddForce(Vector3.up * height, ForceMode.Impulse);
@@ -117,7 +120,7 @@ public class PlayerScene : MonoBehaviour
 
     public void Glide()
     {
-        gaso.clip = SymApp.instance.status.glideClip;
+        gaso.clip = status.glideClip;
         gaso.Play();
         ac.SetBool("glide", true);
         f.force = Vector3.up * 20f;
@@ -133,20 +136,20 @@ public class PlayerScene : MonoBehaviour
     public void Updraft()
     {
         ac.SetBool("glide", true);
-        aso.clip = SymApp.instance.status.updraftClip;
+        aso.clip = status.updraftClip;
         aso.Play();
         rb.AddForce(Vector3.up * 10f, ForceMode.Impulse);
     }
 
     public void Squeak()
     {
-        aso.clip = SymApp.instance.status.squeakClip;
+        aso.clip = status.squeakClip;
         aso.Play();
     }
 
     public void Dig()
     {
-        aso.clip = SymApp.instance.status.digClip;
+        aso.clip = status.digClip;
         aso.Play();
 
         RaycastHit hit;
@@ -157,14 +160,14 @@ public class PlayerScene : MonoBehaviour
             {
                 string code = hit.transform.gameObject.GetComponent<Interactable>().Interact(transform);
                 string[] pToScreen = code.Split('-');
-                SymApp.instance.manager.ui.SendCode(pToScreen[0], pToScreen[1]);
+                SymApp.Instance.manager.ui.SendCode(pToScreen[0], pToScreen[1]);
             }
         }
     }
 
     public void Nibble()
     {
-        aso.clip = SymApp.instance.status.nibbleClip;
+        aso.clip = status.nibbleClip;
         aso.Play();
 
         RaycastHit hit;
@@ -194,14 +197,14 @@ public class PlayerScene : MonoBehaviour
 
     public void Magnet()
     {
-        maso.clip = SymApp.instance.status.magnetClip;
+        maso.clip = status.magnetClip;
         maso.Play();
         mMMeshRenderer.enabled = true;
     }
 
     public void MagnetPull()
     {
-        foreach (Rigidbody magnetic in SymApp.instance.status.magnetics)
+        foreach (Rigidbody magnetic in status.magnetics)
         {
             if (magnetMask.bounds.Contains(magnetic.position))
             {
@@ -223,7 +226,7 @@ public class PlayerScene : MonoBehaviour
 
     public void DiveBomb()
     {
-        aso.clip = SymApp.instance.status.diveBombClip;
+        aso.clip = status.diveBombClip;
         aso.Play();
         f.force = -Vector3.up * 50f;
     }
@@ -243,5 +246,29 @@ public class PlayerScene : MonoBehaviour
     {
         sketch = sketch * rb.rotation;
         rb.MoveRotation(Quaternion.Lerp(rb.rotation, sketch, Time.deltaTime * 3f));
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "box")
+        {
+            status.boxes.Add(other.gameObject);
+        }
+        if (other.tag == "magnetic")
+        {
+            status.magnetics.Add(other.gameObject.GetComponent<Rigidbody>());
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "box")
+        {
+            status.boxes.Remove(other.gameObject);
+        }
+        if (other.tag == "magnetic")
+        {
+            status.magnetics.Remove(other.gameObject.GetComponent<Rigidbody>());
+        }
     }
 }

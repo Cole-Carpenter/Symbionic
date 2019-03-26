@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//class to contain references to all manager scripts in scene
 public class SymManager : MonoBehaviour    
 {
     public PlayerManager playerManager;

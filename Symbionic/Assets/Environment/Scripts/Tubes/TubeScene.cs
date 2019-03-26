@@ -17,7 +17,8 @@ public class TubeScene : MonoBehaviour
 
     private int nPoints;
 
-    private TubeManager tubes = SymApp.instance.manager.tubes;
+    private TubeManager tubes = SymApp.Instance.manager.tubes;
+    private SymStatus status = SymApp.Instance.status;
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +48,7 @@ public class TubeScene : MonoBehaviour
         camScript.SetTarget(null);
         camScript.enabled = false;
         camScript2.enabled = false;
-        SymApp.instance.manager.playerManager.enabled = false;
+        SymApp.Instance.manager.playerManager.enabled = false;
         playerRB.isKinematic = true;
         playerRB.constraints = RigidbodyConstraints.None;
         tubes.activated = true;
@@ -70,7 +71,7 @@ public class TubeScene : MonoBehaviour
         cam.transform.position = Vector3.Lerp(cam.transform.position, camPoint.position, 2f * Time.deltaTime);
         Vector3 relativePos = playerT.position - cam.transform.position;
         cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, Quaternion.LookRotation(relativePos, Vector3.up), 2f * Time.deltaTime);
-        Vector3 newPos = spline.SplineMove(tubes.realSpeed, playerT);
+        Vector3 newPos = spline.SplineMove(status.tubeSpeed / 10, playerT);
         if (newPos == Vector3.zero)
         {
             playerT.position = warpPoint.position;
@@ -90,7 +91,7 @@ public class TubeScene : MonoBehaviour
         camScript.enabled = true;
         camScript2.enabled = true;
         camScript.SetTarget(playerT);
-        SymApp.instance.manager.playerManager.enabled = true;
+        SymApp.Instance.manager.playerManager.enabled = true;
         playerRB.isKinematic = false;
         playerRB.constraints = RigidbodyConstraints.FreezeRotation;
         spline.ResetSpline();

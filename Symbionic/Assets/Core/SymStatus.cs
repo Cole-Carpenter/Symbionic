@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
+//script to model the current play data
+
 public enum States { canRadar, canMagnet, canDig };
 
 public class SymStatus : MonoBehaviour

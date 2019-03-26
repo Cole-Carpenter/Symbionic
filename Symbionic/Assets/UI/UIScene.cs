@@ -9,8 +9,9 @@ public class UIScene : MonoBehaviour
     private Text descboard;
 
     // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
+        yield return new WaitForSeconds(0.001f);
         codeboard = GameObject.Find("Code").GetComponent<Text>();
         descboard = GameObject.Find("Description").GetComponent<Text>();
     }

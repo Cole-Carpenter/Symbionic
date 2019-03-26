@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//class to contain references to all scene objects
 public class SymScene : MonoBehaviour
 {
     public PlayerScene player;

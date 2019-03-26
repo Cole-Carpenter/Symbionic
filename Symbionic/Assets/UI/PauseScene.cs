@@ -17,7 +17,13 @@ public class PauseScene : MonoBehaviour {
     public Slider fx;
     public Slider music;
 
-    public SymStatus status = SymApp.instance.status;
+    public SymStatus status;
+
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(0.001f);
+        status = SymApp.Instance.status;
+    }
 
     public void FlipButtons()
     {
