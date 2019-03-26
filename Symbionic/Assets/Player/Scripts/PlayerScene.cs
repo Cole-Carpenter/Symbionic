@@ -222,7 +222,7 @@ public class PlayerScene : MonoBehaviour
             else
             {
                 magnetic.GetComponent<Rigidbody>().drag = 1f;
-                magnetic.GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(magnetic.transform.position, rb.position, .8f / Mathf.Pow(Mathf.Log((magnetic.transform.position - rb.position).sqrMagnitude), 2)));
+                magnetic.GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(magnetic.transform.position, rb.position, 0.01f * Mathf.Log((magnetic.transform.position - rb.position).magnitude + 1f)));
             }
         }
     }
