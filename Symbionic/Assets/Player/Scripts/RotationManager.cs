@@ -10,7 +10,7 @@ public class RotationManager : MonoBehaviour {
 
 	void Update()
 	{
-        Vector3 normal = SymApp.Instance.scene.player.GroundCast();
+        normal = SymApp.Instance.scene.player.GroundCast();
         sketch = Quaternion.FromToRotation(transform.up, normal);
         SymApp.Instance.scene.player.RotateTowards(sketch);  
     }

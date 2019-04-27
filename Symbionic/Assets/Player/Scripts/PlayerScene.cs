@@ -242,13 +242,12 @@ public class PlayerScene : MonoBehaviour
 
     public Vector3 GroundCast()
     {
-        
+        Debug.DrawRay(transform.position, -Vector3.up * (distToGround + 10f), Color.black, Time.deltaTime);
         if (Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 3f))
         {
             return hit.normal;
         }
         return Vector3.up;
-        //Debug.DrawRay(transform.position, -Vector3.up * (distToGround + 10f), Color.black, Time.deltaTime);
     }
 
     public void RotateTowards(Quaternion sketch)
