@@ -252,8 +252,11 @@ public class PlayerScene : MonoBehaviour
 
     public void RotateTowards(Quaternion sketch)
     {
+        print("rotation: " + rb.rotation);
+        print("sketch: " + sketch);
         sketch = sketch * rb.rotation;
-        rb.MoveRotation(Quaternion.Lerp(rb.rotation, sketch, Time.deltaTime * 3f));
+        print("newsketch: " + sketch);
+        rb.MoveRotation(Quaternion.Lerp(rb.rotation, sketch, .1f));
     }
 
     private void OnTriggerEnter(Collider other)

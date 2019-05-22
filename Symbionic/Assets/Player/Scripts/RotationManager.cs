@@ -6,13 +6,17 @@ public class RotationManager : MonoBehaviour {
 
 	//temp-variables
     Vector3 normal = Vector3.up;
+    Vector3 up;
     Quaternion sketch;
 
 	void Update()
 	{
+        
         normal = SymApp.Instance.scene.player.GroundCast();
-        sketch = Quaternion.FromToRotation(transform.up, normal);
+        up = SymApp.Instance.scene.player.transform.up;
+        sketch = Quaternion.FromToRotation(up, normal);
         SymApp.Instance.scene.player.RotateTowards(sketch);  
+        
     }
 
 }
